@@ -1,0 +1,7 @@
+Home Page API :
+https://www.swiggy.com/mapi/homepage/getCards?lat=18.5204303&lng=73.8567437
+https://www.swiggy.com/mapi/restaurants/list/v5?offset=0&is-seo-homepage-enabled=true&lat=18.5204303&lng=73.8567437&carousel=true&third_party_vendor=1
+
+
+MENU PAGE :
+https://www.swiggy.com/mapi/menu/pl?page-type=REGULAR_MENU&complete-menu=true&lat=18.5204303&lng=73.8567437&restaurantId=506982&isMenuUx4=true&submitAction=ENTER
