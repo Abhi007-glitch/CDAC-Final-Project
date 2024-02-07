@@ -1,0 +1,155 @@
+### Restaurant table schema
+create table Restaurant (rest_id int primary key AUTO_INCREMENT,
+ name varchar(40), image_id varchar(50), address varchar(60), contact_no varchar(10),email varchar(10));
+
+### Item table schema 
+CREATE TABLE Item (
+  item_id int AUTO_INCREMENT,
+  name varchar(40),
+  picture_id varchar(50),
+  address varchar(60),
+  contact_no varchar(10),
+  email varchar(30),
+  is_veg boolean,
+  price int,
+  rest_id int not null,
+  PRIMARY KEY (item_id, rest_id) -- Include rest_id in the primary key
+) PARTITION BY RANGE (rest_id) (
+  PARTITION p0 VALUES LESS THAN (1),
+  PARTITION p1 VALUES LESS THAN (2)
+);
+
+## Defining relation betweeen Restaurant and item table -******************************** foreign key does not applicable on InnoDB. ***************************************
+ALTER TABLE item
+ADD FOREIGN KEY (rest_id) REFERENCES restaurant(rest_id)
+ON DELETE CASCADE;
+
+
+
+
+2)  -- working One FINAL
+
+DELIMITER //
+
+CREATE PROCEDURE add_partition_for_restaurant(IN new_restaurant_id INT)
+BEGIN
+  DECLARE max_restaurant_id INT;
+  DECLARE partition_name VARCHAR(255);
+
+
+    SET partition_name = CONCAT('p', new_restaurant_id);
+
+    -- Use a prepared statement for dynamic SQL execution
+    SET @dynamicSQL := CONCAT('ALTER TABLE item ADD PARTITION (PARTITION ', partition_name, ' VALUES LESS THAN (', new_restaurant_id + 1, '))');
+
+    PREPARE stmt FROM @dynamicSQL;
+    EXECUTE stmt;
+    DEALLOCATE PREPARE stmt;
+   
+ 
+END //
+
+DELIMITER ;
+
+select * from item Partition(p3);
+
+
+
+3) Trigger and function Does not Work : as Can't run a DynamicSQL or a procedure using Dynamic query
+CREATE TRIGGER add_partition_after_insert AFTER INSERT ON Restaurant
+FOR EACH ROW
+BEGIN
+  DECLARE new_restaurant_id INT;
+  DECLARE partition_name VARCHAR(255);
+  SET new_restaurant_id = NEW.rest_id;
+  SET partition_name = CONCAT('p_', new_restaurant_id);
+  ALTER TABLE item
+  ADD PARTITION (PARTITION partition_name VALUES LESS THAN (new_restaurant_id + 1));
+END;
+
+
+
+
+
+
+
+
+
+
+DELIMITER $$
+
+CREATE FUNCTION execute_dynamic_sql(sql_query TEXT) RETURNS TEXT
+BEGIN
+    DECLARE result TEXT;
+    
+    SET @sql = sql_query;
+    PREPARE stmt FROM @sql;
+    EXECUTE stmt;
+    DEALLOCATE PREPARE stmt;
+    
+    RETURN result;
+END$$
+
+DELIMITER ;
+
+
+
+
+
+
+
+-- Create the Restaurant table
+CREATE TABLE Restaurant (
+    rest_id INT PRIMARY KEY AUTO_INCREMENT,
+    name VARCHAR(40),
+    image_id VARCHAR(50),
+    address VARCHAR(60),
+    contact_no VARCHAR(10),
+    email VARCHAR(30)
+);
+
+ insert into Restaurant (name, image_id, address, contact_no, email) values  ("rest2","img1.jpg","add1","123","a2@gmail");
+
+show create procedure partitioning.add_partition_for_restaurant
+
+SELECT ROUTINE_NAME
+FROM INFORMATION_SCHEMA.ROUTINES
+INNER JOIN INFORMATION_SCHEMA.TABLES
+ON ROUTINES.TABLE_NAME = TABLES.TABLE_NAME
+AND TABLES.TABLE_SCHEMA = partitioning() 
+AND TABLES.TABLE_NAME = 'item';
+
+
+
+SELECT ROUTINE_NAME
+FROM information_schema.ROUTINES
+WHERE ROUTINE_TYPE = 'PROCEDURE'
+AND ROUTINE_DEFINITION LIKE CONCAT('%', 'item', '%');
+
+
+
+-- Insert 10 records into the Restaurant table
+INSERT INTO Restaurant (name, image_id, address, contact_no, email) VALUES
+('Rest2', 'img1.jpg', 'Add1', '123456', 'e2@gmail.com'),
+('Restaurant 2', 'image2.jpg', 'Address 2', '2345678901', 'email2@example.com'),
+('Restaurant 3', 'image3.jpg', 'Address 3', '3456789012', 'email3@example.com'),
+('Restaurant 4', 'image4.jpg', 'Address 4', '4567890123', 'email4@example.com'),
+('Restaurant 5', 'image5.jpg', 'Address 5', '5678901234', 'email5@example.com'),
+('Restaurant 6', 'image6.jpg', 'Address 6', '6789012345', 'email6@example.com'),
+('Restaurant 7', 'image7.jpg', 'Address 7', '7890123456', 'email7@example.com'),
+('Restaurant 8', 'image8.jpg', 'Address 8', '8901234567', 'email8@example.com'),
+('Restaurant 9', 'image9.jpg', 'Address 9', '9012345678', 'email9@example.com'),
+('Restaurant 10', 'image10.jpg', 'Address 10', '0123456789', 'email10@example.com');
+
+
+-- INsert into item
+INSERT INTO item (name, picture_id, address, contact_no, email, is_veg, price, rest_id) VALUES  ('Pizza', 'pic1', '123 Main St', '1234567890', 'info@example.com', 1, 10, 4),
+    ('salad', 'pic3', '789 Oak St', '4561237890', 'support@example.com', 1, 6, 4),
+    ('pasta', 'pic4', '101 Pine St', '9876541230', 'sales@example.com', 0, 12, 4);
+
+INSERT INTO Item (name, picture_id, address, contact_no, email, is_veg, price, rest_id)
+VALUES 
+    ('Pizza', 'pic1', '123 Main St', '1234567890', 'info@example.com', 1, 10, 1),
+    ('Burger', 'pic2', '456 Elm St', '9876543210', 'contact@example.com', 1, 8, 1),
+    ('Salad', 'pic3', '789 Oak St', '4561237890', 'support@example.com', 1, 6, 2),
+    ('Pasta', 'pic4', '101 Pine St', '9876541230', 'sales@example.com', 0, 12, 2);
