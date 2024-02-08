@@ -1,0 +1,201 @@
+### Restaurant table schema
+create table Restaurant (rest_id int primary key AUTO_INCREMENT,
+ name varchar(40), image_id varchar(50), address varchar(60), contact_no varchar(10),email varchar(10));
+
+ or (same)
+CREATE TABLE Restaurant (
+    rest_id INT PRIMARY KEY AUTO_INCREMENT,
+    name VARCHAR(40),
+    image_id VARCHAR(50),
+    address VARCHAR(60),
+    contact_no VARCHAR(10),
+    email VARCHAR(30)
+);
+
+### Item table schema 
+CREATE TABLE Item (
+  item_id int AUTO_INCREMENT,
+  name varchar(40),
+  picture_id varchar(50),
+  address varchar(60),
+  contact_no varchar(10),
+  email varchar(30),
+  is_veg boolean,
+  price int,
+  rest_id int not null,
+  PRIMARY KEY (item_id, rest_id) -- Include rest_id in the primary key
+) PARTITION BY RANGE (rest_id) (
+  PARTITION p0 VALUES LESS THAN (1),
+  PARTITION p1 VALUES LESS THAN (2)
+);
+
+
+** Procedure to create partition
+
+DELIMITER //
+
+CREATE PROCEDURE add_partition_for_restaurant(IN new_restaurant_id INT)
+BEGIN
+  DECLARE max_restaurant_id INT;
+  DECLARE partition_name VARCHAR(255);
+
+
+    SET partition_name = CONCAT('p', new_restaurant_id);
+
+    -- Use a prepared statement for dynamic SQL execution
+    SET @dynamicSQL := CONCAT('ALTER TABLE item ADD PARTITION (PARTITION ', partition_name, ' VALUES LESS THAN (', new_restaurant_id + 1, '))');
+
+    PREPARE stmt FROM @dynamicSQL;
+    EXECUTE stmt;
+    DEALLOCATE PREPARE stmt;
+   
+ 
+END //
+
+DELIMITER ;
+
+
+**** 
+
+
+-- Insert 10 records into the Restaurant table
+
+ insert into Restaurant (name, image_id, address, contact_no, email) values  ("rest2","img1.jpg","add1","123","a2@gmail");
+
+INSERT INTO Restaurant (name, image_id, address, contact_no, email) VALUES
+('Rest2', 'img1.jpg', 'Add1', '123456', 'e2@gmail.com'),
+('Restaurant 2', 'image2.jpg', 'Address 2', '2345678901', 'email2@example.com'),
+('Restaurant 3', 'image3.jpg', 'Address 3', '3456789012', 'email3@example.com'),
+('Restaurant 4', 'image4.jpg', 'Address 4', '4567890123', 'email4@example.com'),
+('Restaurant 5', 'image5.jpg', 'Address 5', '5678901234', 'email5@example.com'),
+('Restaurant 6', 'image6.jpg', 'Address 6', '6789012345', 'email6@example.com'),
+('Restaurant 7', 'image7.jpg', 'Address 7', '7890123456', 'email7@example.com'),
+('Restaurant 8', 'image8.jpg', 'Address 8', '8901234567', 'email8@example.com'),
+('Restaurant 9', 'image9.jpg', 'Address 9', '9012345678', 'email9@example.com'),
+('Restaurant 10', 'image10.jpg', 'Address 10', '0123456789', 'email10@example.com');
+
+
+
+- INsert into item
+INSERT INTO item (name, picture_id, address, contact_no, email, is_veg, price, rest_id) VALUES  ('Pizza', 'pic1', '123 Main St', '1234567890', 'info@example.com', 1, 10, 4),
+    ('salad', 'pic3', '789 Oak St', '4561237890', 'support@example.com', 1, 6, 4),
+    ('pasta', 'pic4', '101 Pine St', '9876541230', 'sales@example.com', 0, 12, 4);
+
+INSERT INTO Item (name, picture_id, address, contact_no, email, is_veg, price, rest_id)
+VALUES 
+    ('Pizza', 'pic1', '123 Main St', '1234567890', 'info@example.com', 1, 10, 1),
+    ('Burger', 'pic2', '456 Elm St', '9876543210', 'contact@example.com', 1, 8, 1),
+    ('Salad', 'pic3', '789 Oak St', '4561237890', 'support@example.com', 1, 6, 2),
+    ('Pasta', 'pic4', '101 Pine St', '9876541230', 'sales@example.com', 0, 12, 2);
+
+***********************************************************************************
+                                 ORDERS TABLE ***********************************************************************************
+
+CREATE TABLE Orders (
+    order_id INT AUTO_INCREMENT,
+    cust_id INT,
+    rest_id INT,
+    item_id INT,
+    quantity INT,
+    status ENUM('preparing', 'completed'),
+    PRIMARY KEY (order_id, cust_id, item_id,rest_id) 
+)
+PARTITION BY RANGE (rest_id) (
+        PARTITION p0 VALUES LESS THAN (1)
+    );
+
+
+*** Procedure to create partitions in order table ---> will be called when a new restaurant will get registered(just like how partition in item table are created)!!
+
+
+DELIMITER //
+
+CREATE PROCEDURE add_partition_in_orders(IN new_restaurant_id INT)
+BEGIN
+  DECLARE max_restaurant_id INT;
+  DECLARE partition_name VARCHAR(255);
+
+    SET partition_name = CONCAT('p', new_restaurant_id);
+    -- Use a prepared statement for dynamic SQL execution
+    SET @dynamicSQL := CONCAT('ALTER TABLE orders ADD PARTITION (PARTITION ', partition_name, ' VALUES LESS THAN (', new_restaurant_id + 1, '))');
+
+    PREPARE stmt FROM @dynamicSQL;
+    EXECUTE stmt;
+    DEALLOCATE PREPARE stmt;
+   
+ 
+END //
+
+DELIMITER ;
+
+
+// inseting values into Orders :
+
+INSERT INTO Orders (cust_id, rest_id, item_id, quantity, status)
+VALUES 
+    (1, 4, 1, 2, 'preparing'),
+    (1, 4, 2, 1, 'preparing'),
+    (2, 4, 3, 3, 'preparing'),
+    (2, 4, 4, 2, 'preparing'),
+    (3, 4, 5, 2, 'preparing'),
+    (3, 4, 6, 1, 'preparing'),
+    (4, 4, 7, 3, 'preparing'),
+    (4, 4, 8, 1, 'preparing'),
+    (5, 4, 9, 2, 'preparing'),
+    (5, 4, 10, 1, 'preparing'),
+    (6, 5, 11, 3, 'preparing'),
+    (6, 5, 12, 2, 'preparing'),
+
+
+// ****************** DELETING RECORDS IN a partitioned table
+
+
+// Restaurant owner after preparing all the records will click on completed button, at that time we will delete all the records of the given cust_id and rest_id from the order partition table. -- at the same time we could ask customer for the review.
+
+
+
+DELIMITER $$
+CREATE PROCEDURE delete_orders_by_cust_id_and_rest_id(IN customer_id INT, IN rest_id INT)
+BEGIN
+ 
+  DECLARE total_deleted INT DEFAULT 0;
+  DECLARE partition_name VARCHAR(64);
+
+  -- Construct partition name dynamically
+  SET partition_name = CONCAT('p', rest_id);
+
+
+  START TRANSACTION;
+    DELETE FROM Orders
+    WHERE cust_id = customer_id;
+    SET total_deleted = ROW_COUNT();
+  COMMIT;
+
+ IF total_deleted > 0 THEN
+    SELECT CONCAT('00001', ' Orders deleted for customer ', customer_id, ' in restaurant ', rest_id);
+  ELSE
+    SELECT CONCAT('00002', ' No orders found for customer ', customer_id, ' in restaurant ', rest_id);
+  END IF;
+END$$
+DELIMITER ;
+
+
+//
+
+
+***************** COMMAND TO DELETE,update,Insert and Select RECORD FROM SPECIFIC partition and specific id or attribute value ************************ 
+ DELETE FROM orders PARTITION(p4) where cust_id=1;
+ UPDATE Orders Partition(p4) SET status = 'completed' WHERE order_id = 3;
+ INSERT INTO Orders Partition(p4) (cust_id, rest_id, item_id, quantity, status) values (6,4,11,4,'preparing');
+ select * from orders Partition(p4) where status='complete';
+
+
+
+
+
+
+
+
+
+
+

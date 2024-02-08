@@ -38,7 +38,7 @@ select * from Sales Partition(p0);  //p0-partition name
 select S.store_id from (select * from Sales Partition(p1) )as S;
 
 5) Adding a new partition to a table already having partition
-****NOTE: added partittions VALUES LESS THAN contrinat value should be always greater than last partition (i.e patition constraint should be incremental in nature)
+****NOTE: added partittions VALUES LESS THAN constrinat value should be always greater than last partition (i.e patition constraint should be incremental in nature)
 ALTER TABLE sales ADD PARTITION (
          partition p2024 VALUES LESS THAN (2025)
 )
