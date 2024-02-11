@@ -147,7 +147,7 @@ VALUES
     (6, 5, 12, 2, 'preparing'),
 
 
-// ****************** DELETING RECORDS IN a partitioned table
+// ****************** DELETING RECORDS IN a partitioned table 
 
 
 // Restaurant owner after preparing all the records will click on completed button, at that time we will delete all the records of the given cust_id and rest_id from the order partition table. -- at the same time we could ask customer for the review.
@@ -188,6 +188,7 @@ DELIMITER ;
  UPDATE Orders Partition(p4) SET status = 'completed' WHERE order_id = 3;
  INSERT INTO Orders Partition(p4) (cust_id, rest_id, item_id, quantity, status) values (6,4,11,4,'preparing');
  select * from orders Partition(p4) where status='complete';
+
 
 
 

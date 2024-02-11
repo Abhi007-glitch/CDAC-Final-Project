@@ -14,15 +14,24 @@ CREATE TABLE Item (
   price int,
   rest_id int not null,
   PRIMARY KEY (item_id, rest_id) -- Include rest_id in the primary key
-) PARTITION BY RANGE (rest_id) (
-  PARTITION p0 VALUES LESS THAN (1),
-  PARTITION p1 VALUES LESS THAN (2)
-);
+) 
 
 ## Defining relation betweeen Restaurant and item table -******************************** foreign key does not applicable on InnoDB. ***************************************
 ALTER TABLE item
 ADD FOREIGN KEY (rest_id) REFERENCES restaurant(rest_id)
 ON DELETE CASCADE;
+
+
+##### RestItem (get items from rest)
+CREATE TABLE RestItem ( 
+   rest_id int, 
+   item_id int,
+   primary key(rest_id,item_id) // as multiple item_id for one rest_id
+)PARTITION BY RANGE (rest_id) (
+  PARTITION p0 VALUES LESS THAN (1),
+  PARTITION p1 VALUES LESS THAN (2)
+);
+
 
 
 
@@ -40,16 +49,95 @@ BEGIN
     SET partition_name = CONCAT('p', new_restaurant_id);
 
     -- Use a prepared statement for dynamic SQL execution
-    SET @dynamicSQL := CONCAT('ALTER TABLE item ADD PARTITION (PARTITION ', partition_name, ' VALUES LESS THAN (', new_restaurant_id + 1, '))');
+    SET @dynamicSQL := CONCAT('ALTER TABLE RestItem ADD PARTITION (PARTITION ', partition_name, ' VALUES LESS THAN (', new_restaurant_id + 1, '))');
 
     PREPARE stmt FROM @dynamicSQL;
     EXECUTE stmt;
     DEALLOCATE PREPARE stmt;
-   
- 
-END //
+  
+END; //
 
 DELIMITER ;
+
+
+
+
+// Trigger to update the partition data when ever a new item is added in any rest
+
+
+// for insertion 
+
+DELIMITER //
+CREATE TRIGGER insert_item_into_restitem AFTER INSERT ON Item
+FOR EACH ROW
+BEGIN
+  DECLARE inserted_rest_id INT;
+  DECLARE partition_name varchar(255);
+  SET inserted_rest_id = NEW.rest_id;
+  SET partition_name = CONCAT('p', NEW.rest_id);
+
+  -- Insert into appropriate partition based on rest_id
+  INSERT INTO RestItem (item_id, rest_id)
+  VALUES (NEW.item_id, NEW.rest_id);
+END; //
+
+DELIMITER ;
+
+
+// for deletion  - [PARTITION (p{deleted_rest_id}) not working currently ]
+
+DELIMITER //
+CREATE TRIGGER delete_item_from_restitem AFTER DELETE ON Item
+FOR EACH ROW
+BEGIN
+  DECLARE deleted_rest_id INT;
+  DECLARE partition_name varchar(255);
+  SET deleted_rest_id = OLD.rest_id;  
+  SET partition_name = CONCAT('p', OLD.rest_id);
+
+  -- Directly delete from partition for efficiency and clarity
+  DELETE FROM RestItem 
+  WHERE item_id = OLD.item_id ;
+
+END;//
+
+DELIMITER ;
+
+
+
+
+// for updation
+
+Delimiter //
+CREATE TRIGGER update_item_from_restitem After Update ON Item
+FOR EACH ROW 
+BEGIN
+  DECLARE rest_id INT;
+  DECLARE partition_name varchar(255);
+  SET rest_id = NEW.rest_id;
+  SET partition_name = CONCAT('p', NEW.rest_id);
+  
+  -- Updating records in particular partition 
+  UPDATE RestItem  set item_id=NEW.item_id
+  WHERE item_id =OLD.item_id;
+  
+END; //
+
+Delimiter ;
+
+
+
+
+
+// *************************** DishToRest ************************* 
+
+TO be done
+
+
+
+
+
+
 
 
 
@@ -222,8 +310,8 @@ END$$
 DELIMITER ;
 
 
-
 // update a particluar record from a particular partition 
-UPDATE Orders
+UPDATE Orders Partition(p4)
 SET status = 'completed'
-WHERE order_id = 12;
+WHERE order_id = 3;
+
