@@ -26,7 +26,7 @@ import lombok.ToString;
 @ToString
 @Table(name="orders")
 @Entity
-public class Orders extends BaseEntity{
+public class Orders {
 
 	@EmbeddedId //composite primary key
     private RestItemId id; // (composite primary key -> restId, custId, orderId(auto generated) 	

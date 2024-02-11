@@ -14,7 +14,7 @@ import lombok.Setter;
 public class RestItemId {
 	@Column(name = "rest_id")
     private Integer restId;
-
+	
     @Column(name = "item_id")
     private Integer itemId;
 

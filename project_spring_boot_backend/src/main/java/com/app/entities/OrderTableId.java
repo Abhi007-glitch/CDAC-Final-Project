@@ -6,6 +6,7 @@ import javax.persistence.Column;
 import javax.persistence.Embeddable;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
+import javax.persistence.Id;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -15,7 +16,7 @@ import lombok.Setter;
 @Embeddable
 public class OrderTableId {
 	
-	
+	@Id
 	@Column(name="order_id")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long orderId; 
@@ -39,7 +40,6 @@ public class OrderTableId {
 	    public int hashCode() {
 	        return Objects.hash(restId, itemId,orderId);
 	    }
-	
 	
 
 }

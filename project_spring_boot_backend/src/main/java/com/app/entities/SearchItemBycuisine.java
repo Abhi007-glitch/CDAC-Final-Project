@@ -4,10 +4,8 @@ import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 
 @Entity
-public class RestItem {
-	
+public class SearchItemBycuisine {
+
 	@EmbeddedId
-    private RestItemId id; 
-		
-	
+	private SearchItemBycuisineId id;
 }

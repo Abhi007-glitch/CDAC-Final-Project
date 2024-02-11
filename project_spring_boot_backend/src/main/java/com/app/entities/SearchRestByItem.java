@@ -1,13 +1,18 @@
 package com.app.entities;
 
+
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 
+import lombok.Getter;
+
+
 @Entity
-public class RestItem {
+public class SearchRestByItem {
 	
 	@EmbeddedId
-    private RestItemId id; 
+    private SearchRestByItemId id;
 		
-	
 }
+
+

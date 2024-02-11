@@ -112,7 +112,7 @@ Delimiter //
 CREATE TRIGGER update_item_from_restitem After Update ON Item
 FOR EACH ROW 
 BEGIN
-  DECLARE rest_id INT;
+  DECLARE rest_id INT ;
   DECLARE partition_name varchar(255);
   SET rest_id = NEW.rest_id;
   SET partition_name = CONCAT('p', NEW.rest_id);
@@ -135,10 +135,47 @@ Delimiter ;
 // else get the partition name and based on it update DishToRest table by adding/ updating/ deleting new record. --> to be done by firing query from the backEnd.
 
 
+#DishNameToPartitionMapping
+Create table DishNameToPartition (
+dish_id int AUTO_INCREMENT ,
+dish_name varchar(40),
+primary key (dish_id)
+)
 
-TO be done
+Create table SearchRestByItem(  
+dish_id int,
+rest_id int, 
+primary key (dish_id, rest_id)
+)PARTITION BY RANGE (dish_id) (
+  PARTITION p0 VALUES LESS THAN (1)
+);
 
 
+// procedure to create partition of SearchRestByItem table whenever a Item with some new Dish Type is added 
+
+
+
+
+
+
+
+//********************* cuisine  ***************************************//
+
+
+#cuisineNameToMapping
+Create table DishIdToName (
+cuisine_id int AUTO_INCREMENT ,
+cuisine_name int,
+primary key (cuisine_id)
+)
+
+Create table SearchItemBycuisine(  
+cuisine_id int,
+rest_id int, 
+primary key (cuisine_id, rest_id)
+)PARTITION BY RANGE (cuisine_id) (
+  PARTITION p0 VALUES LESS THAN (1)  // here we will have no dynamic partitioning just static as per no of cuisine pre decided 
+);
 
 
 
