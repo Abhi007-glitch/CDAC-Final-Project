@@ -2,18 +2,14 @@ package com.app.entities;
 
 import java.math.BigDecimal;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
-import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -33,12 +29,11 @@ import lombok.ToString;
 @Entity
 public class Items  {
     
-	 @Id
+	@Id
 	 @Column(name="item_id")
 	    @GeneratedValue(strategy = GenerationType.IDENTITY)
 		private Long itemId;
 	
-	@ManyToOne()
     @NotBlank(message = "Item name is required")
     @Column(length = 60)
     private String itemName;

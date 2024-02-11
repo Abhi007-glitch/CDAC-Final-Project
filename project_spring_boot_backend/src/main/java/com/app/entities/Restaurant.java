@@ -37,8 +37,8 @@ import lombok.ToString;
 @Table(name = "restaurant")
 @Entity
 public class Restaurant  {
-	
-     @Id
+    
+	@Id
 	 @Column(name="rest_id")
 	 @GeneratedValue(strategy = GenerationType.IDENTITY)
      private Long restId;
@@ -93,7 +93,7 @@ public class Restaurant  {
     @Column(length = 50)
     private CuisineType cuisine;
     
-    private String restRole; 
+    private String restRole;
     
     /*@OneToMany(mappedBy = "rest",
     		cascade = CascadeType.ALL,
