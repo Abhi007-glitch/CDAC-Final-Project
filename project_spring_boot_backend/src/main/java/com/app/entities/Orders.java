@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.CascadeType;
+import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
@@ -22,28 +23,18 @@ import lombok.ToString;
 
 @NoArgsConstructor
 @AllArgsConstructor
-@Setter
-@Getter
 @ToString
 @Table(name="orders")
 @Entity
 public class Orders extends BaseEntity{
 
+	@EmbeddedId //composite primary key
+    private RestItemId id; // (composite primary key -> restId, custId, orderId(auto generated) 	
+	
 	@DateTimeFormat(pattern = "HH:mm:ss")
 	private LocalTime orderTime;
+   
+	private OrderStatus status;
 	
-	@ManyToOne(fetch = FetchType.LAZY,
-			cascade = CascadeType.ALL)
-	@JoinColumn(name="customer_id")
-	private Customer cust;
-	
-	@ManyToOne(fetch =FetchType.LAZY,
-			cascade = CascadeType.ALL)
-	@JoinColumn(name="restaurant_id")
-	private Restaurant rest;
-	
-	@OneToMany(mappedBy = "order", 
-			cascade = CascadeType.ALL,
-			orphanRemoval = true)
-    private List<Items> items = new ArrayList<Items>();
+    private int quantity;
 }

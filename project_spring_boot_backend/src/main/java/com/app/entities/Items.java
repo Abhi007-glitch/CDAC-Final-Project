@@ -8,6 +8,8 @@ import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
@@ -28,8 +30,12 @@ import lombok.ToString;
 @ToString
 @Table(name = "item")
 @Entity
-public class Items extends BaseEntity {
-
+public class Items  {
+    
+	 @Column(name="item_id")
+	    @GeneratedValue(strategy = GenerationType.IDENTITY)
+		private Long itemId;
+	
     @NotBlank(message = "Item name is required")
     @Column(length = 60)
     private String itemName;
@@ -48,18 +54,17 @@ public class Items extends BaseEntity {
 
    @Enumerated(EnumType.STRING)
    @Column(length = 50)
-    private CuisineType cuisineType; 
+    private CuisineType cuisineType;  /// ***** changes here
    
-   @ManyToOne(fetch = FetchType.LAZY
-		   ,cascade = CascadeType.ALL)
-   @JoinColumn(name="restaurant_id")
-   private Restaurant rest;
+   @NotNull(message = "a item must belong to some restaurant")
+   @Column(name="rest_id")
+   private int restId;   // (rest->rest_id)
    
-   @ManyToOne(fetch = FetchType.LAZY,
-		   cascade = CascadeType.ALL)
-   @JoinColumn(name="order_id")
-   private Orders order;
-   
+//   @ManyToOne(fetch = FetchType.LAZY,
+//		   cascade = CascadeType.ALL)
+//   
+//   @JoinColumn(name="order_id") /// why order in item?
+//   private Orders order;
    
    
    
