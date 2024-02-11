@@ -9,6 +9,8 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Lob;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
@@ -33,8 +35,12 @@ import lombok.ToString;
 @ToString
 @Table(name = "restaurant")
 @Entity
-public class Restaurant extends BaseEntity {
-
+public class Restaurant  {
+    
+	 @Column(name="rest_id")
+	 @GeneratedValue(strategy = GenerationType.IDENTITY)
+     private Long restId;
+	
     @NotBlank(message = "Name is required")
     @Column(length = 50)
     private String restName;
@@ -85,7 +91,7 @@ public class Restaurant extends BaseEntity {
     @Column(length = 50)
     private CuisineType cuisine;
     
-    private String restRole;
+  //  private String restRole;  purpose?
     
     /*@OneToMany(mappedBy = "rest",
     		cascade = CascadeType.ALL,

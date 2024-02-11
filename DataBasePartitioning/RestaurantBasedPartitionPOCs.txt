@@ -37,8 +37,8 @@ CREATE TABLE RestItem (
 
 
 2)  -- working One FINAL
-
-DELIMITER //
+-- will need to call seprately by firing query from backend
+DELIMITER // 
 
 CREATE PROCEDURE add_partition_for_restaurant(IN new_restaurant_id INT)
 BEGIN
@@ -63,7 +63,7 @@ DELIMITER ;
 
 
 // Trigger to update the partition data when ever a new item is added in any rest
-
+// Normal(vi JPA query) insertion updation deletion on item table will get's automatically reflected
 
 // for insertion 
 
@@ -130,6 +130,11 @@ Delimiter ;
 
 
 // *************************** DishToRest ************************* 
+// anytime a new item is added in any rest then it's value would be checked manually (using JPA) if it is already present in dishToDishPartition table
+// if no matching value then we will be required to manually fire the procedure to create a new partition and insert value into it
+// else get the partition name and based on it update DishToRest table by adding/ updating/ deleting new record. --> to be done by firing query from the backEnd.
+
+
 
 TO be done
 
