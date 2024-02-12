@@ -25,5 +25,9 @@ public class ItemService {
 		Items persistentItem =itemRepo.save(item);
 		return mapper.map(persistentItem, ItemDTO.class);
 	}
+
+	public void deleteItem(Long id) {
+		itemRepo.deleteById(id);
+	}
 	
 }
