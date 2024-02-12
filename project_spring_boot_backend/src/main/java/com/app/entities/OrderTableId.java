@@ -1,5 +1,6 @@
 package com.app.entities;
 
+import java.io.Serializable;
 import java.util.Objects;
 
 import javax.persistence.Column;
@@ -14,9 +15,8 @@ import lombok.Setter;
 @Getter
 @Setter
 @Embeddable
-public class OrderTableId {
+public class OrderTableId implements Serializable{
 	
-	@Id
 	@Column(name="order_id")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long orderId; 
@@ -40,6 +40,7 @@ public class OrderTableId {
 	    public int hashCode() {
 	        return Objects.hash(restId, itemId,orderId);
 	    }
+	
 	
 
 }

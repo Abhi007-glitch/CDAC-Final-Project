@@ -11,12 +11,19 @@ import lombok.NoArgsConstructor;
 
 @Entity
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
 public class UserInfo extends BaseEntity{
 	
     private String email;
     private String password;
     private String roles;
+    
+	public UserInfo(String email, String password, String roles) {
+		super();
+		this.email = email;
+		this.password = password;
+		this.roles = roles;
+	}
+    
 }
 

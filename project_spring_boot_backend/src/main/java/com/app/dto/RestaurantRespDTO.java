@@ -11,12 +11,11 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-public class RestaurantDTO {
+public class RestaurantRespDTO {
 	
 	private Long id;
     private String restName;
     private String restEmail;
-    private String restPassword;
     private String restAddr;
     private String restContact;
     private byte[] restImage;
@@ -24,6 +23,5 @@ public class RestaurantDTO {
     private LocalTime restOpeningTime;
     private LocalTime restClosingTime;
     private CuisineType cuisine;
-    private String restRole;
-    
+    private String role;
 }

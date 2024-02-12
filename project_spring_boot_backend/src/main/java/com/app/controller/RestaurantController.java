@@ -15,13 +15,14 @@ import org.springframework.security.core.Authentication;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.*;
 
 import com.app.dto.AuthRequest;
 import com.app.dto.RestaurantDTO;
-import com.app.entities.Restaurant;
+import com.app.dto.RestaurantRespDTO;
 import com.app.service.JwtService;
 import com.app.service.RestaurantService;
 
@@ -47,15 +48,19 @@ public class RestaurantController {
 	
 	@PostMapping("/new")
 	public ResponseEntity<?> addNewRestaurant(@RequestBody @Valid RestaurantDTO restDto){
-		System.out.println("Received Restaurant entity: " + restDto);
 		return ResponseEntity.status(HttpStatus.CREATED).body(restService.addNewRestaurant(restDto));
 	}
 	
 	@GetMapping("/all")
 	@PreAuthorize("hasAuthority('ADMIN')")
-	public ResponseEntity<List<Restaurant>> getAllRestaurants() {
+	public ResponseEntity<?> getAllRestaurants(
+			@RequestParam(defaultValue = "0",required = false) int pageNumber,
+			@RequestParam(defaultValue = "4",required = false) int pageSize) {
+		System.out.println("PageNumber: "+pageNumber+", PageSize:"+pageSize);
 	    try {
-	        List<Restaurant> restaurants = restService.getAllRestaurants();
+	        List<RestaurantRespDTO> restaurants = restService.getAllRestaurants(pageNumber,pageSize);
+	        if(restaurants.isEmpty())
+	        	return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
 	        return ResponseEntity.ok(restaurants);
 	    } catch (Exception e) {
 	        e.printStackTrace();

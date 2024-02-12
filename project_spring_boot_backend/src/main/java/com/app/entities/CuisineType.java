@@ -9,5 +9,6 @@ public enum CuisineType {
 	PapayaKhar,
 	LittiChokha,
 	Indian,
-	Italian
+	Italian,
+	Mexican
 }
