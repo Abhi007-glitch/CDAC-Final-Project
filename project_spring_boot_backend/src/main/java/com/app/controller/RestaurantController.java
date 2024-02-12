@@ -14,6 +14,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,8 +22,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.app.dto.AuthRequest;
+import com.app.dto.ItemDTO;
 import com.app.dto.RestaurantDTO;
 import com.app.dto.RestaurantRespDTO;
+import com.app.service.ItemService;
 import com.app.service.JwtService;
 import com.app.service.RestaurantService;
 
@@ -39,6 +42,14 @@ public class RestaurantController {
 	
 	@Autowired
 	private AuthenticationManager authenticationManager;
+	
+	@Autowired
+	private ItemService itemService;
+	
+	@PostMapping("/new/{id}")
+	public ResponseEntity<?> addNewItem(@RequestBody ItemDTO itemDto,@PathVariable Long id){
+		return ResponseEntity.status(HttpStatus.CREATED).body(itemService.addNewItem(itemDto,id));
+	}
 	
 	@GetMapping("/welcome")
 	@PreAuthorize("hasAuthority('ADMIN')")

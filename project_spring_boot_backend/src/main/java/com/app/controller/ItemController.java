@@ -22,11 +22,6 @@ public class ItemController {
 	@Autowired
 	private ItemService itemService;
 	
-	@PostMapping("/new")
-	public ResponseEntity<?> addNewItem(@RequestBody ItemDTO itemDto){
-		return ResponseEntity.status(HttpStatus.CREATED).body(itemService.addNewItem(itemDto));
-	}
-	
 	@DeleteMapping("/delete/{id}")
 	public ResponseEntity<?> deleteItem(@PathVariable Long id){
 		try {

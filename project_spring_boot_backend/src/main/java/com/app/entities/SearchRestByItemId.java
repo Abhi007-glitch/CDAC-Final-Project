@@ -8,20 +8,24 @@ import javax.persistence.Embeddable;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
+@AllArgsConstructor
+@NoArgsConstructor
 @Embeddable
 public class SearchRestByItemId implements Serializable{
     
 	@Column(name="dish_id")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Integer dishId ;
+	private Long dishId ;
 	
 	@Column(name="rest_id")
-	private Integer restId ;
+	private Long restId ;
 	
 	@Override
     public boolean equals(Object o) {

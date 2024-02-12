@@ -63,5 +63,10 @@ public class RestaurantService {
         procedureQuery.registerStoredProcedureParameter("restId", Long.class, ParameterMode.IN);
         procedureQuery.setParameter("restId", restId);
         procedureQuery.execute();
+        
+//        StoredProcedureQuery procedureQuery1 = entityManager.createStoredProcedureQuery("add_partition_for_Dish");
+//        procedureQuery1.registerStoredProcedureParameter("dish_id", Long.class, ParameterMode.IN);
+//        procedureQuery1.setParameter("dish_id", dish_id);
+//        procedureQuery1.execute();
     }
 }

@@ -23,10 +23,10 @@ public class CuisineNameToPartition {
    @Id
    @GeneratedValue(strategy = GenerationType.IDENTITY)
    @Column(name="cuisine_id")
-   Integer cuisineId ;
+   private Long cuisineId ;
    
    @Column(name="cuisine_name")
-   String cuisineName;
+   private String cuisineName;
    
 	
 }

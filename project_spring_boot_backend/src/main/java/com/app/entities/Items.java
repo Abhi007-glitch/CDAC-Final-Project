@@ -60,16 +60,16 @@ public class Items  {
    @Column(name="rest_id")
    private int restId;   // (rest->rest_id)
    
+   @NotNull
+   @Column(name="dish_type")
+   private String dishType;
 //   @ManyToOne(fetch = FetchType.LAZY,
 //		   cascade = CascadeType.ALL)
 //   
 //   @JoinColumn(name="order_id") /// why order in item?
 //   private Orders order;
    
-   //made changes
-   @ManyToOne
-   @JoinColumn(name = "dish_id")
-   private DishNameToPartitionMapping dishNameToPartitionMapping;
+   
   
    
    
