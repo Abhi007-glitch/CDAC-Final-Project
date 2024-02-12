@@ -49,7 +49,7 @@ public class Items  {
     @Column(length=120)
     private String itemDescription;
 
-    @NotNull(message = "Veg status is required")
+    @NotNull(message = "isVeg status is required")
     private Boolean isVeg;
 
    @Enumerated(EnumType.STRING)
@@ -59,6 +59,10 @@ public class Items  {
    @NotNull(message = "a item must belong to some restaurant")
    @Column(name="rest_id")
    private int restId;   // (rest->rest_id)
+   
+   @NotNull(message ="Dish type should be defined i.e Biryani,Idli")    // new added property
+   @Column(name="dish_type")
+   private String dishType;
    
 //   @ManyToOne(fetch = FetchType.LAZY,
 //		   cascade = CascadeType.ALL)

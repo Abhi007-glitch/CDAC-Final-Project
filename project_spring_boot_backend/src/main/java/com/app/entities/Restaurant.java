@@ -95,6 +95,9 @@ public class Restaurant  {
     
     private String restRole;
     
+    @Column(length = 100)
+    private String message;  // to be displayed on rest menu page 
+    
     /*@OneToMany(mappedBy = "rest",
     		cascade = CascadeType.ALL,
     		orphanRemoval = true)

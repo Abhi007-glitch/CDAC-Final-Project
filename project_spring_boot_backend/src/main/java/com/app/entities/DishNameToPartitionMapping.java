@@ -29,7 +29,6 @@ public class DishNameToPartitionMapping {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	Integer dishId;
 	
-//	made changes
-	@OneToMany(mappedBy = "dishNameToPartitionMapping")
-	private List<Items> items=new ArrayList<Items>();
+	@Column(name="dish_name") // this will be in one to many relation with items table 
+	String dishName;
 }

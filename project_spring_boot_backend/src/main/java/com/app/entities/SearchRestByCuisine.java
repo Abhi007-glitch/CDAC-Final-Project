@@ -17,7 +17,7 @@ import lombok.ToString;
 @ToString
 @Entity
 @Table(name="searchitembycuisine")
-public class SearchItemByCuisine {
+public class SearchRestByCuisine {
 
 	@EmbeddedId
 	private SearchRestByCuisineId id;

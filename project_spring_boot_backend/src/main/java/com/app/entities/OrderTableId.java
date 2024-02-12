@@ -29,6 +29,9 @@ public class OrderTableId implements Serializable{
 	 @Column(name = "item_id")
 	 private Integer itemId;
 	 
+	 @Column(name="cart_id")
+	 private Integer cartId;
+	 
 	 
 	 @Override
 	    public boolean equals(Object o) {
