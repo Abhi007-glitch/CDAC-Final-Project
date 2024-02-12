@@ -1,12 +1,27 @@
 package com.app.entities;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.persistence.Table;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
+
+@NoArgsConstructor
+@AllArgsConstructor
+@Setter
+@Getter
+@ToString
 @Entity
 public class DishNameToPartitionMapping {
 	@Id
@@ -14,8 +29,7 @@ public class DishNameToPartitionMapping {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	Integer dishId;
 	
-	@OneToMany
-	@Column(name="dish_name") // this will be in one to many relation with items table 
-	String dishName;
-   
+//	made changes
+	@OneToMany(mappedBy = "dishNameToPartitionMapping")
+	private List<Items> items=new ArrayList<Items>();
 }
