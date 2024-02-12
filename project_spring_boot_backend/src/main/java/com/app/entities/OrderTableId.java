@@ -1,11 +1,13 @@
 package com.app.entities;
 
+import java.io.Serializable;
 import java.util.Objects;
 
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
+import javax.persistence.Id;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -13,8 +15,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Embeddable
-public class OrderTableId {
-	
+public class OrderTableId implements Serializable{
 	
 	@Column(name="order_id")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)

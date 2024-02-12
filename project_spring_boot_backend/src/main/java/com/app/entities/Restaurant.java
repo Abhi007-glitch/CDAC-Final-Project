@@ -11,6 +11,7 @@ import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import javax.persistence.Lob;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
@@ -37,6 +38,7 @@ import lombok.ToString;
 @Entity
 public class Restaurant  {
     
+	@Id
 	 @Column(name="rest_id")
 	 @GeneratedValue(strategy = GenerationType.IDENTITY)
      private Long restId;
@@ -91,7 +93,7 @@ public class Restaurant  {
     @Column(length = 50)
     private CuisineType cuisine;
     
-  //  private String restRole;  purpose?
+    private String restRole;
     
     /*@OneToMany(mappedBy = "rest",
     		cascade = CascadeType.ALL,

@@ -1,5 +1,6 @@
 package com.app.entities;
 
+import java.io.Serializable;
 import java.util.Objects;
 
 import javax.persistence.Column;
@@ -11,7 +12,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Embeddable
-public class RestItemId {
+public class RestItemId  implements Serializable{
 	@Column(name = "rest_id")
     private Integer restId;
 
