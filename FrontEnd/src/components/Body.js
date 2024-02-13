@@ -63,18 +63,18 @@ const Body = () => {
   ) : (
     <>
       {/* "searchContainer" */}
-      <div className="p-5 bg-pink-50 my-6">
+      <div className="lg:p-5 md:p-5  px-0 bg-pink-50 lg:my-6 md:my-6 flex">
         <input
           value={searchText}
           type="text"
-          className="search-name "
+          className="search-name w-1/3 lg:w-2/8 md:w-2/8 sm:w-3/8 "
           placeholder="Food/Hotel name"
           onChange={(e) => {
             setSearchText(e.target.value);
           }}
         />
         <button
-          className="px-4 mx-4 bg-purple-900 hover:bg-gray-500 text-white rounded-md"
+          className="lg:px-4 lg:mx-4 md:px-4 md:mx-4 sm:px-4 sm:mx-4 px-1 text-sm lg:text-xl md:text-lg sm:text-base  bg-purple-900 hover:bg-gray-500 text-white rounded-md"
           type="submit"
           onClick={() => {
             let data = FilterData(searchText, restaurantData);

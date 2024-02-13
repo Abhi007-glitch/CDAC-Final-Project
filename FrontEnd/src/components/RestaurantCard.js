@@ -9,7 +9,7 @@ const RestaurantCard = ({
 }) => {
   // card element
   return (
-    <div className=" w-72 bg-base-100 my-5 transition duration-700 ease-in-out transform hover:-translate-y-1 hover:scale-105 hover:border-2  p-4 m-4 ">
+    <div className=" w-72 bg-base-100 my-5 transition duration-700 ease-in-out transform hover:-translate-y-1 hover:scale-105  p-4 m-4 ">
       <img
         src={
           "https://res.cloudinary.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,w_508,h_320,c_fill/" +
