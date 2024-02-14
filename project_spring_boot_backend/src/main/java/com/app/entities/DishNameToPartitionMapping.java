@@ -1,10 +1,15 @@
 package com.app.entities;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -19,11 +24,12 @@ import lombok.ToString;
 @ToString
 @Entity
 public class DishNameToPartitionMapping {
-	
 	@Id
+	@Column(name="dish_id")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long dishId;
+	Integer dishId;
 	
-	@Column(length = 30)
-	private String dishType;
+//	made changes
+	@OneToMany(mappedBy = "dishNameToPartitionMapping")
+	private List<Items> items=new ArrayList<Items>();
 }

@@ -14,10 +14,10 @@ import lombok.Setter;
 @Embeddable
 public class RestItemId  implements Serializable{
 	@Column(name = "rest_id")
-    private Long restId;
+    private Integer restId;
 
     @Column(name = "item_id")
-    private Long itemId;
+    private Integer itemId;
 
     // Getters and setters for restId and itemId
 

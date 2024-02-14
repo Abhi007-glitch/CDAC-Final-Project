@@ -20,6 +20,5 @@ public class ItemDTO {
     private String itemDescription;
     private Boolean isVeg;
     private CuisineType cuisineType;  
-    private int restId;
-    private String dishType;
+   private int restId; 
 }

@@ -24,10 +24,10 @@ public class OrderTableId implements Serializable{
 	private Long orderId; 
 	
 	 @Column(name = "rest_id")
-	 private Long restId;
+	 private Integer restId;
 
 	 @Column(name = "item_id")
-	 private Long itemId;
+	 private Integer itemId;
 	 
 	 
 	 @Override

@@ -17,6 +17,7 @@ import lombok.ToString;
 @Getter
 @ToString
 @Entity
+@Table(name="searchrestbyitem")
 public class SearchRestByItem {
 	
 	@EmbeddedId
