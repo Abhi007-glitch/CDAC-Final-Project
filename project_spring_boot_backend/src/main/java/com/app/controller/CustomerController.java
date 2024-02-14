@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.*;
 
 import com.app.dto.AuthRequest;
 import com.app.dto.CustomerDTO;
@@ -49,10 +48,14 @@ public class CustomerController {
     }
 	
 	@PostMapping("/new")
-	public ResponseEntity<?> addNewCustomer(@org.springframework.web.bind.annotation.RequestBody @Valid CustomerDTO custDto){
-		System.out.println(custDto);
-		return ResponseEntity.status(HttpStatus.CREATED).body(custService.addNewCustomer(custDto));
+	public ResponseEntity<?> addNewCustomer(@RequestBody @Valid CustomerDTO custDto) {
+	    try {
+	        return ResponseEntity.status(HttpStatus.CREATED).body(custService.addNewCustomer(custDto));
+	    } catch (Exception e) {
+	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred while adding the customer.");
+	    }
 	}
+
 	
 	@GetMapping("/all")
 	@PreAuthorize("hasAuthority('USER')")

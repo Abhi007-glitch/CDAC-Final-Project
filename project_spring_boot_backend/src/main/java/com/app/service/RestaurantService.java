@@ -9,16 +9,19 @@ import javax.persistence.StoredProcedureQuery;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.app.dto.ItemDTO;
 import com.app.dto.RestaurantDTO;
-import com.app.dto.RestaurantRespDTO;
+import com.app.entities.Items;
 import com.app.entities.Restaurant;
 import com.app.entities.UserInfo;
+import com.app.repository.ItemsRepository;
 import com.app.repository.RestaurantRepository;
 import com.app.repository.UserInfoRepository;
 
@@ -40,13 +43,20 @@ public class RestaurantService {
 	
 	@Autowired
     private EntityManager entityManager;
+	
+	@Autowired
+	private ItemsRepository itemRepo;
+	
+	public List<ItemDTO> getAllItemsByRestId(Long restId, int pageNumber, int pageSize) {
+	    Pageable pageable = PageRequest.of(pageNumber, pageSize);
+	    Page<Items> itemsPage = itemRepo.findByRestId(restId, pageable);
 
-	public List<RestaurantRespDTO> getAllRestaurants(int pageNumber, int pageSize){
-		Pageable pageable=PageRequest.of(pageNumber, pageSize);
-		List<Restaurant> restList=restRepo.findAll(pageable).getContent();
-		return restList.stream().
-				map(res->mapper.map(res, RestaurantRespDTO.class))
-				.collect(Collectors.toList());
+	    List<ItemDTO> itemDTOList = itemsPage.getContent()
+	            .stream()
+	            .map(item -> mapper.map(item, ItemDTO.class))
+	            .collect(Collectors.toList());
+
+	    return itemDTOList;
 	}
 	
 	public Restaurant addNewRestaurant(RestaurantDTO restDto) {

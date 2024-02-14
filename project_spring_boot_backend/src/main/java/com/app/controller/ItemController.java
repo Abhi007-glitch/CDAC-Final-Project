@@ -23,10 +23,14 @@ public class ItemController {
 	private ItemService itemService;
 	
 	@PostMapping("/new")
-	public ResponseEntity<?> addNewItem(@RequestBody ItemDTO itemDto){
-		return ResponseEntity.status(HttpStatus.CREATED).body(itemService.addNewItem(itemDto));
+	public ResponseEntity<?> addNewItem(@RequestBody ItemDTO itemDto) {
+	    try {
+	        return ResponseEntity.status(HttpStatus.CREATED).body(itemService.addNewItem(itemDto));
+	    } catch (Exception e) {
+	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred while adding the item.");
+	    }
 	}
-	
+
 	@DeleteMapping("/delete/{id}")
 	public ResponseEntity<?> deleteItem(@PathVariable Long id){
 		try {
