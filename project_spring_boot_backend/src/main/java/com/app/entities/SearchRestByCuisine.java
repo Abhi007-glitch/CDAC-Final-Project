@@ -20,4 +20,5 @@ public class SearchRestByCuisine {
 
 	@EmbeddedId
 	private SearchRestByCuisineId id;
+	
 }
