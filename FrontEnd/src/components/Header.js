@@ -11,7 +11,7 @@ import { useSelector } from "react-redux";
 
 export const Logo = () => {
   return (
-    <a href="/" >
+    <a href="/">
       <img
         alt="logo"
         className="h-20 w-20 p-4 lg:h-32 lg:w-32  md:h-24 md:w-24 sm:h-20 sm:w-20 object-cover bg-pink-50 borde"
@@ -23,83 +23,96 @@ export const Logo = () => {
 
 const Header = () => {
   const [status, setStatus] = useState(false);
-  const cartItems= useSelector(store=> store.cart.items);
+  const cartItems = useSelector((store) => store.cart.items);
   return (
     <div className="fixed top-0 z-50 w-full flex justify-center bg-pink-50 shadow-lg">
-    <header className="flex w-5/6 justify-around item-cborder-b lg:mb-8  md:mb-4  mt-0 mb-2 bg-pink-50   ">
-      <Logo />
-      <div className="nav-items  w-10/12 lg:w-8/12 md:w-9/12 sm:9/12 flex flex-row-reverse justify-evenly text-xl font-medium ">
-        <ul className="flex justify-around lg:py-10 md:py-7 sm:py:5 py-5 px-3 text-[#484b5c]  lg:w-10/12 md:w-10/12 sm:w-10/12 w-full ">
-          <li className=" hover:text-[#ffa701] ">
-            <Link to="/">
+      <header className="flex w-5/6 justify-around item-cborder-b lg:mb-8  md:mb-4  mt-0 mb-2 bg-pink-50   ">
+        <Logo />
+        <div className="nav-items  w-10/12 lg:w-8/12 md:w-9/12 sm:9/12 flex flex-row-reverse justify-evenly text-xl font-medium ">
+          <ul className="flex justify-around lg:py-10 md:py-7 sm:py:5 py-5 px-3 text-[#484b5c]  lg:w-10/12 md:w-10/12 sm:w-10/12 w-full ">
+            <li className=" hover:text-[#ffa701] ">
+              <Link to="/">
+                <div className="flex">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    strokeWidth={1.5}
+                    stroke="currentColor"
+                    className="w-3 h-3 lg:w-6 lg:h-6 md:h-5 md:w-5 sm:w-4 sm:h-4 "
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"
+                    />
+                  </svg>
+                  <p className="lg:px-3 md:px-1 px-1 text-xs lg:text-xl md:text-lg sm:text-base">
+                    Search
+                  </p>
+                </div>
+              </Link>
+            </li>
+
+            <li className="lg:px-8 md:px-4 sm:px:2 px:2 hover:text-[#ffa701]">
+              <Link to="/offer">
+                <div className="flex  ">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    strokeWidth={1.5}
+                    stroke="currentColor"
+                    className="w-3 h-3 lg:w-6 lg:h-6 md:h-5 md:w-5 sm:w-4 sm:h-4"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M9 14.25l6-6m4.5-3.493V21.75l-3.75-1.5-3.75 1.5-3.75-1.5-3.75 1.5V4.757c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0111.186 0c1.1.128 1.907 1.077 1.907 2.185zM9.75 9h.008v.008H9.75V9zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm4.125 4.5h.008v.008h-.008V13.5zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z"
+                    />
+                  </svg>
+
+                  <p className="lg:px-3 md:px-1 px-0 text-xs lg:text-xl md:text-lg sm:text-base">
+                    Offer
+                  </p>
+                </div>
+              </Link>
+            </li>
+
+            <li className="lg:px-8 md:px-4 sm:px:2   hover:text-[#ffa701]">
               <div className="flex">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  strokeWidth={1.5}
-                  stroke="currentColor"
-                  className="w-3 h-3 lg:w-6 lg:h-6 md:h-5 md:w-5 sm:w-4 sm:h-4 "
+                <Link
+                  to="/about"
+                  className="text-xs lg:text-xl md:text-lg sm:text-base pt-0"
                 >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"
-                  />
-                </svg>
-                <p className="lg:px-3 md:px-1 px-1 text-xs lg:text-xl md:text-lg sm:text-base">Search</p>
+                  About us
+                </Link>
               </div>
-            </Link>
-          </li>
+            </li>
 
-          <li className="lg:px-8 md:px-4 sm:px:2 px:2 hover:text-[#ffa701]">
-            <Link to="/offer">
-              <div className="flex  ">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  strokeWidth={1.5}
-                  stroke="currentColor"
-                  className="w-3 h-3 lg:w-6 lg:h-6 md:h-5 md:w-5 sm:w-4 sm:h-4"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M9 14.25l6-6m4.5-3.493V21.75l-3.75-1.5-3.75 1.5-3.75-1.5-3.75 1.5V4.757c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0111.186 0c1.1.128 1.907 1.077 1.907 2.185zM9.75 9h.008v.008H9.75V9zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm4.125 4.5h.008v.008h-.008V13.5zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z"
-                  />
-                </svg>
-
-                <p className="lg:px-3 md:px-1 px-0 text-xs lg:text-xl md:text-lg sm:text-base">Offer</p>
-              </div>
-            </Link>
-          </li>
-
-          <li className="lg:px-8 md:px-4 sm:px:2   hover:text-[#ffa701]">
-          <div className="flex">
-          <Link to="/about" className="text-xs lg:text-xl md:text-lg sm:text-base pt-0">About us</Link>
-          </div>
-          </li>
-
-          <li className=" lg:px-8 md:px-4 sm:px:2 hover:text-[#ffa701]">
-            <div className="flex ">
+            <li className=" lg:px-8 md:px-4 sm:px:2 hover:text-[#ffa701]">
+              <div className="flex ">
                 <Link to="/cart" role="button" className="relative flex">
-                  <svg className="flex-1 lg:w-8 lg:h-8 md:w-6 md:h-6 sm:h-5 sm:w-5 h-5 w-5 fill-current" viewBox="0 0 24 24">
+                  <svg
+                    className="flex-1 lg:w-8 lg:h-8 md:w-6 md:h-6 sm:h-5 sm:w-5 h-5 w-5 fill-current"
+                    viewBox="0 0 24 24"
+                  >
                     <path d="M17,18C15.89,18 15,18.89 15,20A2,2 0 0,0 17,22A2,2 0 0,0 19,20C19,18.89 18.1,18 17,18M1,2V4H3L6.6,11.59L5.24,14.04C5.09,14.32 5,14.65 5,15A2,2 0 0,0 7,17H19V15H7.42A0.25,0.25 0 0,1 7.17,14.75C7.17,14.7 7.18,14.66 7.2,14.63L8.1,13H15.55C16.3,13 16.96,12.58 17.3,11.97L20.88,5.5C20.95,5.34 21,5.17 21,5A1,1 0 0,0 20,4H5.21L4.27,2M7,18C5.89,18 5,18.89 5,20A2,2 0 0,0 7,22A2,2 0 0,0 9,20C9,18.89 8.1,18 7,18Z" />
                   </svg>
                   <span className="absolute right-0 top-0 rounded-full bg-red-600 lg:w-4 lg:h-4 md:w-4 md:h-4 sm:w-3 sm:h-3 w-3 h-3 text-xs lg:text-sm md:text-sm sm:text-xs  top right p-0 m-0 text-white font-sans  leading-tight text-center">
-                  {cartItems.length}
+                    {cartItems.length}
                   </span>
                 </Link>
-              
-              <p className="text-xs lg:text-xl md:text-lg sm:text-base">Cart</p>
-            </div>
-          </li>
-        </ul>
-      </div>
-    </header>
+
+                <p className="text-xs lg:text-xl md:text-lg sm:text-base">
+                  Cart
+                </p>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </header>
     </div>
-    
   );
 };
 

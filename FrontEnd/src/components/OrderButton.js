@@ -1,12 +1,5 @@
-
-const OrderButton = ()=>{
-
-  return(
-      <div>
-          
-      </div>
-  )
-
-}
+const OrderButton = () => {
+  return <div></div>;
+};
 
 export default OrderButton;

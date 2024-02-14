@@ -1,9 +1,9 @@
 const RestaurantCard = ({
   name,
   cuisines,
-  slaString,
+  sla,
   cloudinaryImageId,
-  costForTwoString,
+  costForTwo,
   avgRating,
   aggregatedDiscountInfo,
 }) => {
@@ -41,8 +41,8 @@ const RestaurantCard = ({
             </svg>
             <p className="text-sm">{avgRating}</p>
           </div>
-          <li className="py-2 text-sm text-stone-600">{slaString}</li>
-          <li className="p-2 text-sm text-stone-600">{costForTwoString}</li>
+          <li className="py-2 text-sm text-stone-600">{sla.slaString}</li>
+          <li className="p-2 text-sm text-stone-600">{costForTwo}</li>
         </div>
 
         {/* Juaggad */}
