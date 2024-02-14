@@ -92,7 +92,7 @@ public class Restaurant  {
     @Enumerated(EnumType.STRING)
     @Column(length = 50)
     private CuisineType cuisine;
-     
+    
     private String restRole;
     
     @Column(length = 100)

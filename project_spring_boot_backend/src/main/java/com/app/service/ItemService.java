@@ -1,12 +1,9 @@
 package com.app.service;
 
-import java.util.Optional;
-
 import javax.transaction.Transactional;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException;
 import org.springframework.stereotype.Service;
 
 import com.app.dto.ItemDTO;
@@ -29,14 +26,8 @@ public class ItemService {
 		return mapper.map(persistentItem, ItemDTO.class);
 	}
 
-	public void deleteItem(Long id) throws NotFoundException {
-	    Optional<Items> optionalItem = itemRepo.findById(id);
-
-	    if (optionalItem.isPresent()) {
-	        itemRepo.deleteById(id);
-	    } else {
-	        throw new NotFoundException();
-	    }
+	public void deleteItem(Long id) {
+		itemRepo.deleteById(id);
 	}
 	
 }
