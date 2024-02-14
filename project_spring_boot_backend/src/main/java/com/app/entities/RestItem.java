@@ -15,7 +15,6 @@ import lombok.ToString;
 @Setter
 @Getter
 @ToString
-@Table(name="restitem")
 @Entity
 public class RestItem {
 	@EmbeddedId

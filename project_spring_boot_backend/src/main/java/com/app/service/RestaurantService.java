@@ -59,9 +59,19 @@ public class RestaurantService {
 	}
 	
 	private void callAddPartitionProcedure(Long restId) {
+		
+		// procedure to create partition in rest_item(get items by rest)
         StoredProcedureQuery procedureQuery = entityManager.createStoredProcedureQuery("add_partition_for_restaurant");
         procedureQuery.registerStoredProcedureParameter("restId", Long.class, ParameterMode.IN);
         procedureQuery.setParameter("restId", restId);
         procedureQuery.execute();
+        
+        
+        // procedure to create partition in orders table (to store orders restaurant wise)
+        StoredProcedureQuery  createPartitionInOrderByRestIdQuery = entityManager.createStoredProcedureQuery("add_partition_in_orders");
+        createPartitionInOrderByRestIdQuery.registerStoredProcedureParameter("restId", Long.class, ParameterMode.IN);
+        createPartitionInOrderByRestIdQuery.setParameter("restId", restId);
+        procedureQuery.execute();
+        
     }
 }

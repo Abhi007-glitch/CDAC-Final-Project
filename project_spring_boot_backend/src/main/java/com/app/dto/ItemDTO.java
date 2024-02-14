@@ -21,4 +21,5 @@ public class ItemDTO {
     private Boolean isVeg;
     private CuisineType cuisineType;  
    private int restId; 
+   private String dishType;
 }

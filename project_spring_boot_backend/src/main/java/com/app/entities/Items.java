@@ -71,10 +71,7 @@ public class Items  {
 //   private Orders order;
    
    //made changes
-   @ManyToOne
-   @JoinColumn(name = "dish_id")
-   private DishNameToPartitionMapping dishNameToPartitionMapping;
-  
+   
    
    
    
