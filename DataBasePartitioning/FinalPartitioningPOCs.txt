@@ -187,8 +187,8 @@ DELIMITER ;
 
 #cuisineNameToMapping
 Create table cuisine_name_to_partition (
-cuisine_id int AUTO_INCREMENT ,
-cuisine_name int,
+cuisine_id bigint AUTO_INCREMENT ,
+cuisine_name bigint,
 primary key (cuisine_id)
 )
 
@@ -203,6 +203,7 @@ primary key (cuisine_id, rest_id)
 
 
  // here we will have no dynamic partitioning just static as per no of cuisine pre decided
+ //runs whenever new cuisine is added in cuisine_name_to_partition
 DELIMITER // 
 
 
@@ -215,7 +216,7 @@ BEGIN
     SET partition_name = CONCAT('p', new_cuisine_id);
 
     -- Use a prepared statement for dynamic SQL execution
-    SET @dynamicSQL := CONCAT('ALTER TABLE search_rest_by_cuisine ADD PARTITION (PARTITION ', partition_name, ' VALUES LESS THAN (', new_dish_id + 1, '))');
+    SET @dynamicSQL := CONCAT('ALTER TABLE search_rest_by_cuisine ADD PARTITION (PARTITION ', partition_name, ' VALUES LESS THAN (', new_cuisine_id + 1, '))');
 
     PREPARE stmt FROM @dynamicSQL;
     EXECUTE stmt;
@@ -247,7 +248,7 @@ PARTITION BY RANGE (rest_id) (
 
 
 *** Procedure to create partitions in order table ---> will be called when a new restaurant will get registered(just like how partition in item table are created)!!
-
+//runs whenever new dish is added in dish_name_to_partition_mapping
 
 DELIMITER //
 
@@ -330,7 +331,12 @@ DELIMITER ;
  UPDATE Orders Partition(p4) SET status = 'completed' WHERE order_id = 3;
  INSERT INTO Orders Partition(p4) (cust_id, rest_id, item_id, quantity, status) values (6,4,11,4,'preparing');
  select * from orders Partition(p4) where status='complete';
-
+SELECT TABLE_NAME, SUBPARTITION_NAME
+    -> FROM information_schema.PARTITIONS
+    -> WHERE TABLE_NAME = 'restaurant' AND SUBPARTITION_NAME = 'P1';
+SELECT TABLE_NAME, PARTITION_NAME
+FROM information_schema.PARTITIONS
+WHERE TABLE_NAME = 'restaurant' AND PARTITION_NAME = 'P1';
 
 
 
