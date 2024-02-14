@@ -296,19 +296,19 @@ VALUES
 
 
 DELIMITER $$
-CREATE PROCEDURE delete_orders_by_cust_id_and_rest_id(IN customer_id INT, IN rest_id INT)
+CREATE PROCEDURE delete_orders_by_rest_id_and_cust_id_and_cart_id(IN restaurant_id INT,IN customer_id INT,  In cartID INT)
 BEGIN
  
   DECLARE total_deleted INT DEFAULT 0;
-  DECLARE partition_name VARCHAR(64);
+  DECLARE partition_name VARCHAR(256);
 
   -- Construct partition name dynamically
-  SET partition_name = CONCAT('p', rest_id);
+  SET partition_name = CONCAT('p',restaurant_id);
 
 
   START TRANSACTION;
-    DELETE FROM Orders
-    WHERE cust_id = customer_id;
+    DELETE FROM Orders PARTITION(partition_name)
+    WHERE cust_id = customer_id and rest_id=restaurant_id and cart_id=cartID;
     SET total_deleted = ROW_COUNT();
   COMMIT;
 

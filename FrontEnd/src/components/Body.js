@@ -1,28 +1,53 @@
 import RestaurantCard from "./RestaurantCard"; // default import
 import { restaurantList } from "./config"; // named import
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext, useCallback, memo } from "react";
 import Shimmer from "./Shimmer";
 import { Link } from "react-router-dom";
 import useOnlineStatus from "../utils/useOnlineStatus";
-import { swiggy_api_URL } from "../../const";
+import {
+  swiggy_api_URL,
+  swiggy_api_URL_Infinite_Scroll,
+  api_key,
+  location_api,
+} from "../../const";
+import useGetLatitude from "../utils/useGetLatitude";
+import LocationContext from "../ContextAPi/Location";
+import { extractAndFormateData } from "../utils/extractAndFormateData";
 
 const Body = () => {
   const [searchText, setSearchText] = useState("");
-  const [restaurantFilterdData, setRestaurantFilterdData] =
-    useState(restaurantList);
+  const [restaurantFilterdData, setRestaurantFilterdData] = useState([]);
   const [restaurantData, setRestaurantData] = useState(undefined);
+
+  const {
+    latitude,
+    longitude,
+    location_name,
+    setLocation,
+    setLatitude,
+    setLongitude,
+    page,
+    setPage,
+  } = useContext(LocationContext); // using Location context;
+
+  // intersection observer
 
   // this below code show that toggle is a state variable that is returned by useState()
 
   const toggle = useState("false"); // state variable
   const [toggleValue, setToggleValue] = toggle; // [react variable , function to change value of react variable]
 
-  const FilterData = (searchText, restaurantFilterdData) => {
+  const FilterData = (searchText, restaurantData) => {
+    if (searchText.trim() == "") {
+      return restaurantData;
+    }
+
     const filterData = restaurantFilterdData.filter((restaurant) => {
-      return restaurant?.data?.name
+      return restaurant?.info?.name
         ?.toLowerCase()
         .includes(searchText.toLowerCase());
     });
+
     return filterData;
   };
 
@@ -38,20 +63,121 @@ const Body = () => {
   }
 
   const getData = async () => {
-    const data = await fetch(swiggy_api_URL);
+    let URL = swiggy_api_URL + `?latitude=${latitude}&longitude=${longitude}`;
+    const data = await fetch(URL);
     const json = await data.json();
-    setRestaurantData(json?.data?.cards[2]?.data?.data?.cards);
-    setRestaurantFilterdData(json?.data?.cards[2]?.data?.data?.cards);
+
+    console.log("JSON received at Body ", json);
+    const listDetails = json.data.cards;
+
+    const temp = extractAndFormateData(listDetails);
+
+    // json?.data?.cards[2]?.data?.data?.cards
+    setRestaurantData(temp);
+    setRestaurantFilterdData(temp);
+
+    localStorage.setItem(restaurantData, JSON.stringify(restaurantData));
   };
 
+  const getInfiniteData = async () => {
+    let URL =
+      swiggy_api_URL_Infinite_Scroll +
+      `?latitude=${latitude}&longitude=${longitude}&page=${page}`;
+    const Data = await fetch(URL);
+    const json = await Data.json();
+    const listDetails = json?.data?.cards;
+
+    const temp = extractAndFormateData(listDetails);
+
+    let prev = restaurantData;
+    let data;
+
+    if (prev) data = [...prev, ...temp];
+    else data = [...temp];
+
+    setRestaurantData(data);
+
+    prev = restaurantFilterdData;
+    if (prev) data = [...prev, ...temp];
+    else data = [...temp];
+    setRestaurantFilterdData(data);
+  };
+
+  const handleInfiniteScroll = async () => {
+    try {
+      if (
+        window.innerHeight + document.documentElement.scrollTop >=
+        document.documentElement.scrollHeight
+      ) {
+        setPage((prev) => prev + 1);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  // Normal useEffect to make call for Regular data
   useEffect(() => {
-    getData();
-    console.log("UseEffect called ");
+    if (page != 1) {
+      getInfiniteData();
+    }
+    console.log("Regular useEffect called ");
+    console.log(page);
+  }, [page]);
+
+  //For New Location clearing older data and fetchig new one.
+  useEffect(() => {
+    setRestaurantData(undefined);
+    setRestaurantFilterdData([]);
+    setPage(1);
+    console.log("Location Useffect called");
+    const Async = async () => {
+      await getData();
+    };
+    Async();
+  }, [latitude, longitude]);
+
+  // useEffect for InfiniteScroll
+  useEffect(() => {
+    document.addEventListener("scroll", handleInfiniteScroll);
+
+    return () => {
+      document.removeEventListener("scroll", handleInfiniteScroll);
+    };
   }, []);
   console.log("render");
 
+  const getLocation = useCallback(
+    async (location_name) => {
+      try {
+        let URL =
+          location_api + `?api_key=${api_key}&location_name=${location_name}`;
+        const data = await fetch(URL);
+        const details = await data.json();
+        console.log("older location - > ", latitude, longitude);
+        setLatitude(details.data[0].latitude);
+        setLongitude(details.data[0].longitude);
+        console.log("New Location - > ", latitude, longitude);
+      } catch (error) {
+        console.log("Error Message ", error.message);
+      }
+    },
+    [location_name]
+  );
+
   // condtional rendering - does not cause re-render (remeber this)
   //conditional rendering is done inside a render();
+
+  //debouncing
+  useEffect(() => {
+    const Filter = setTimeout(() => {
+      let data = FilterData(searchText, restaurantData);
+      setRestaurantFilterdData(data);
+    }, 1000);
+    return () => {
+      clearTimeout(Filter);
+    };
+  }, [searchText]);
 
   // avoiding rending component (Early return)
   if (restaurantFilterdData === undefined) {
@@ -62,19 +188,40 @@ const Body = () => {
     <Shimmer />
   ) : (
     <>
+      <div className="lg:p-5 md:p-5  py-2 px-0 bg-pink-50 lg:my-6 md:my-6 flex pl-2">
+        <input
+          value={location_name}
+          type="text"
+          className="search-name w-1/3 lg:w-2/8 md:w-2/8 sm:w-3/8 "
+          placeholder="location"
+          onChange={(e) => {
+            setLocation(e.target.value);
+          }}
+        />
+        <button
+          className="lg:px-4 lg:mx-4 md:px-4 md:mx-4 sm:px-4 sm:mx-4 mx-2 px-1 text-sm lg:text-xl md:text-lg sm:text-base  bg-purple-900 hover:bg-gray-500 text-white rounded-md"
+          type="submit"
+          onClick={() => {
+            getLocation(location_name);
+          }}
+        >
+          Search City Name
+        </button>
+      </div>
+
       {/* "searchContainer" */}
-      <div className="lg:p-5 md:p-5  px-0 bg-pink-50 lg:my-6 md:my-6 flex">
+      <div className="lg:p-5 md:p-5  py-2 px-0 pl-2 bg-pink-50 lg:my-6 md:my-6 flex">
         <input
           value={searchText}
           type="text"
           className="search-name w-1/3 lg:w-2/8 md:w-2/8 sm:w-3/8 "
-          placeholder="Food/Hotel name"
+          placeholder="Food/Hotel Name"
           onChange={(e) => {
             setSearchText(e.target.value);
           }}
         />
         <button
-          className="lg:px-4 lg:mx-4 md:px-4 md:mx-4 sm:px-4 sm:mx-4 px-1 text-sm lg:text-xl md:text-lg sm:text-base  bg-purple-900 hover:bg-gray-500 text-white rounded-md"
+          className="lg:px-4 lg:mx-4 md:px-4 md:mx-4 sm:px-4 sm:mx-4 mx-2 px-1 text-sm lg:text-xl md:text-lg sm:text-base  bg-purple-900 hover:bg-gray-500 text-white rounded-md"
           type="submit"
           onClick={() => {
             let data = FilterData(searchText, restaurantData);
@@ -92,10 +239,10 @@ const Body = () => {
           restaurantFilterdData.map((restaurant) => {
             return (
               <Link
-                to={"/restaurant/" + restaurant.data.id}
-                key={restaurant.data.id}
+                to={"/restaurant/" + restaurant.info.id}
+                key={restaurant.info.id}
               >
-                <RestaurantCard {...restaurant.data} />
+                <RestaurantCard {...restaurant.info} />
               </Link>
             );
           })
