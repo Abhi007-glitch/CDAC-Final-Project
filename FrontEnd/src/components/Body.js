@@ -13,12 +13,16 @@ import {
 import useGetLatitude from "../utils/useGetLatitude";
 import LocationContext from "../ContextAPi/Location";
 import { extractAndFormateData } from "../utils/extractAndFormateData";
+import useGetDataByDishName from "../utils/useGetDataByDishName";
+import useGetDataByCuisineName from "../utils/useGetDataByCuisine";
 
 const Body = () => {
   const [searchText, setSearchText] = useState("");
   const [restaurantFilterdData, setRestaurantFilterdData] = useState([]);
   const [restaurantData, setRestaurantData] = useState(undefined);
 
+  const [foodNameText, setFoodNameText] = useState("");
+  const [CuisineNameText, setCuisineNameText] = useState("");
   const {
     latitude,
     longitude,
@@ -71,6 +75,7 @@ const Body = () => {
     const listDetails = json.data.cards;
 
     const temp = extractAndFormateData(listDetails);
+    console.log("Formated Data : " + temp);
 
     // json?.data?.cards[2]?.data?.data?.cards
     setRestaurantData(temp);
@@ -125,7 +130,7 @@ const Body = () => {
     console.log(page);
   }, [page]);
 
-  //For New Location clearing older data and fetchig new one.
+  //For New Location clearing older data and fetchig new one. -- when we fetch data for a new location
   useEffect(() => {
     setRestaurantData(undefined);
     setRestaurantFilterdData([]);
@@ -168,7 +173,7 @@ const Body = () => {
   // condtional rendering - does not cause re-render (remeber this)
   //conditional rendering is done inside a render();
 
-  //debouncing
+  //debouncing  -> for filtering data based on the restaurant name
   useEffect(() => {
     const Filter = setTimeout(() => {
       let data = FilterData(searchText, restaurantData);
@@ -187,56 +192,83 @@ const Body = () => {
   return restaurantData === undefined ? (
     <Shimmer />
   ) : (
-    <>
-      <div className="lg:p-5 md:p-5  py-2 px-0 bg-pink-50 lg:my-6 md:my-6 flex pl-2">
+    <div className="mt-[10%]">
+      {/* <div className="lg:p-5 md:p-5  py-2 px-0 bg-pink-50 lg:my-6 md:my-6 flex pl-2">
+           <input value={location_name} type="text" className="search-name w-1/3 lg:w-2/8 md:w-2/8 sm:w-3/8 " placeholder="location" onChange={(e)=>{setLocation( e.target.value)
+             }} />
+           <button className="lg:px-4 lg:mx-4 md:px-4 md:mx-4 sm:px-4 sm:mx-4 mx-2 px-1 text-sm lg:text-xl md:text-lg sm:text-base  bg-purple-900 hover:bg-gray-500 text-white rounded-md"  type="submit" 
+           onClick={()=>{getLocation(location_name)}
+            } >Search City Name</button>
+        </div>
+         */}
+
+      {/* "searchByRestaurnt" */}
+      {/* <div className="lg:p-5 md:p-5  py-2 px-0 pl-2 bg-pink-50 lg:my-6 md:my-6 flex">
+           <input value={searchText} type="text" className="search-name w-1/3 lg:w-2/8 md:w-2/8 sm:w-3/8 " placeholder="Food/Hotel Name" onChange={(e)=>{setSearchText( e.target.value)
+             }} />
+           <button className="lg:px-4 lg:mx-4 md:px-4 md:mx-4 sm:px-4 sm:mx-4 mx-2 px-1 text-sm lg:text-xl md:text-lg sm:text-base  bg-purple-900 hover:bg-gray-500 text-white rounded-md"  type="submit" onClick={()=>{let data = FilterData(searchText,restaurantData);
+            setRestaurantFilterdData(data);}
+            } >Search</button>
+        </div>
+         */}
+
+      {/* "searchbyfoodName" */}
+      <div className="lg:p-5 md:p-5  py-2 px-0 pl-2 bg-pink-50 lg:my-6 md:my-6 flex">
         <input
-          value={location_name}
+          value={foodNameText}
           type="text"
           className="search-name w-1/3 lg:w-2/8 md:w-2/8 sm:w-3/8 "
-          placeholder="location"
+          placeholder="Dish Name"
           onChange={(e) => {
-            setLocation(e.target.value);
+            setFoodNameText(e.target.value);
           }}
         />
         <button
           className="lg:px-4 lg:mx-4 md:px-4 md:mx-4 sm:px-4 sm:mx-4 mx-2 px-1 text-sm lg:text-xl md:text-lg sm:text-base  bg-purple-900 hover:bg-gray-500 text-white rounded-md"
           type="submit"
-          onClick={() => {
-            getLocation(location_name);
-          }}
+          onClick={
+            () => {
+              let data = useGetDataByDishName(foodNameText); // making call to the backend to search restaurant by item/dish
+              setRestaurantData(data);
+            } //
+          }
         >
-          Search City Name
+          Search By Dish Name
         </button>
       </div>
 
-      {/* "searchContainer" */}
+      {/* "searchbyCuisineName" */}
       <div className="lg:p-5 md:p-5  py-2 px-0 pl-2 bg-pink-50 lg:my-6 md:my-6 flex">
         <input
-          value={searchText}
+          value={CuisineNameText}
           type="text"
           className="search-name w-1/3 lg:w-2/8 md:w-2/8 sm:w-3/8 "
-          placeholder="Food/Hotel Name"
+          placeholder="Cuisine Name"
           onChange={(e) => {
-            setSearchText(e.target.value);
+            setCuisineNameText(e.target.value);
           }}
         />
         <button
           className="lg:px-4 lg:mx-4 md:px-4 md:mx-4 sm:px-4 sm:mx-4 mx-2 px-1 text-sm lg:text-xl md:text-lg sm:text-base  bg-purple-900 hover:bg-gray-500 text-white rounded-md"
           type="submit"
-          onClick={() => {
-            let data = FilterData(searchText, restaurantData);
-            setRestaurantFilterdData(data);
-          }}
+          onClick={
+            () => {
+              let data = useGetDataByCuisineName(CuisineNameText); // making call to the backend to search restaurant by item/dish
+              setRestaurantData(data);
+            } //
+          }
         >
-          Search
+          Search By Cuisine
         </button>
       </div>
+
       {/* restaurantCardList */}
       <div className="flex flex-wrap justify-center">
         {restaurantFilterdData.length == 0 ? (
           <h1>No Restaurant Matching Your Filter Found!!</h1>
         ) : (
           restaurantFilterdData.map((restaurant) => {
+            console.log(restaurant);
             return (
               <Link
                 to={"/restaurant/" + restaurant.info.id}
@@ -250,7 +282,7 @@ const Body = () => {
         {/* value passed from here above are combined together inside a object called as props which our Restaurant component recives actually   */}
         {/* don't use (data = {...restaurant.data}) */}
       </div>
-    </>
+    </div>
   );
 };
 
