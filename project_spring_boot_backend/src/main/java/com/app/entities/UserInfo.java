@@ -12,8 +12,11 @@ import lombok.NoArgsConstructor;
 @Entity
 @Data
 @NoArgsConstructor
-public class UserInfo extends BaseEntity{
+public class UserInfo{
 	
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
     private String email;
     private String password;
     private String roles;
