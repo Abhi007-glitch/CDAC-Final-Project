@@ -9,7 +9,9 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
@@ -17,21 +19,33 @@ import lombok.ToString;
 @Setter
 @ToString
 @Embeddable
+@AllArgsConstructor
+@NoArgsConstructor
 public class OrderTableId implements Serializable{
 	
-	@Column(name="order_id")
+	@Column(name="order_id") // auto generated
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long orderId; 
 	
 	 @Column(name = "rest_id")
-	 private Integer restId;
+	 private Long restId;
 
 	 @Column(name = "item_id")
-	 private Integer itemId;
+	 private Long itemId;
 	 
 	 @Column(name="cart_id")
-	 private Integer cartId;
+	 private Long cartId;  // will be assigned by backend 
 	 
+	 @Column(name="cust_id")
+	 private Long custId;
+	 
+	 public OrderTableId(Long rest_id,Long cust_id,Long item_id,Long cart_id) {
+		// TODO Auto-generated constructor stub
+		 this.restId=rest_id;
+		 this.custId=cust_id;
+		 this.itemId=item_id;
+		 this.cartId=cart_id;
+	} 
 	 
 	 @Override
 	    public boolean equals(Object o) {

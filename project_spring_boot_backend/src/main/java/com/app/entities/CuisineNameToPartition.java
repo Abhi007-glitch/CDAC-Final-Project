@@ -6,7 +6,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
-
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -23,10 +22,10 @@ public class CuisineNameToPartition {
    @Id
    @GeneratedValue(strategy = GenerationType.IDENTITY)
    @Column(name="cuisine_id")
-   Integer cuisineId ;
+   private Long cuisineId ;
    
    @Column(name="cuisine_name")
-   String cuisineName;
+   private String cuisineName;
    
 	
 }

@@ -34,5 +34,15 @@ public class Orders {
 	@Enumerated(EnumType.STRING)
 	private OrderStatus status;
 	
-    private int quantity;
+    private Integer quantity;
+    
+     
+    public Orders(Long restId, Long custId,Long itemId,Long cartId, LocalTime orderTime, String status, Integer quantity) {
+        this.id = new OrderTableId(restId, custId,itemId,cartId); // Set OrderId and cartId to null
+        this.orderTime = orderTime;
+        this.status = OrderStatus.valueOf(status);
+        this.quantity = quantity;
+    }
+
+
 }
