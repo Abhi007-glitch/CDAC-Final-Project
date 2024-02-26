@@ -24,38 +24,41 @@ export const Logo = () => {
 const Header = () => {
   const [status, setStatus] = useState(false);
   const cartItems = useSelector((store) => store.cart.items);
-  return (
+
+  const visibility = useSelector((store) => store.restaurantView.view);
+
+  return visibility == true ? (
+    <></>
+  ) : (
     <div className="fixed top-0 z-50 w-full flex justify-center bg-pink-50 shadow-lg">
       <header className="flex w-5/6 justify-around item-cborder-b lg:mb-8  md:mb-4  mt-0 mb-2 bg-pink-50   ">
         <Logo />
         <div className="nav-items  w-10/12 lg:w-8/12 md:w-9/12 sm:9/12 flex flex-row-reverse justify-evenly text-xl font-medium ">
           <ul className="flex justify-around lg:py-10 md:py-7 sm:py:5 py-5 px-3 text-[#484b5c]  lg:w-10/12 md:w-10/12 sm:w-10/12 w-full ">
-            <li className=" hover:text-[#ffa701] ">
-              <Link to="/">
-                <div className="flex">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    strokeWidth={1.5}
-                    stroke="currentColor"
-                    className="w-3 h-3 lg:w-6 lg:h-6 md:h-5 md:w-5 sm:w-4 sm:h-4 "
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"
-                    />
-                  </svg>
-                  <p className="lg:px-3 md:px-1 px-1 text-xs lg:text-xl md:text-lg sm:text-base">
-                    Search
-                  </p>
-                </div>
-              </Link>
-            </li>
+            {/* <li className=" hover:text-[#ffa701] ">
+            <Link to="/">
+              <div className="flex">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth={1.5}
+                  stroke="currentColor"
+                  className="w-3 h-3 lg:w-6 lg:h-6 md:h-5 md:w-5 sm:w-4 sm:h-4 "
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"
+                  />
+                </svg>
+                <p className="lg:px-3 md:px-1 px-1 text-xs lg:text-xl md:text-lg sm:text-base">Search</p>
+              </div>
+            </Link>
+          </li> */}
 
             <li className="lg:px-8 md:px-4 sm:px:2 px:2 hover:text-[#ffa701]">
-              <Link to="/offer">
+              <Link to="/restaurants/homePage">
                 <div className="flex  ">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -73,22 +76,13 @@ const Header = () => {
                   </svg>
 
                   <p className="lg:px-3 md:px-1 px-0 text-xs lg:text-xl md:text-lg sm:text-base">
-                    Offer
+                    Restaurant Page
                   </p>
                 </div>
               </Link>
             </li>
 
-            <li className="lg:px-8 md:px-4 sm:px:2   hover:text-[#ffa701]">
-              <div className="flex">
-                <Link
-                  to="/about"
-                  className="text-xs lg:text-xl md:text-lg sm:text-base pt-0"
-                >
-                  About us
-                </Link>
-              </div>
-            </li>
+          
 
             <li className=" lg:px-8 md:px-4 sm:px:2 hover:text-[#ffa701]">
               <div className="flex ">
@@ -109,6 +103,18 @@ const Header = () => {
                 </p>
               </div>
             </li>
+         
+            <li className="lg:px-8 md:px-4 sm:px:2   hover:text-[#ffa701]">
+              <div className="flex">
+                <Link
+                  to="/login"
+                  className="text-xs lg:text-xl md:text-lg sm:text-base pt-0"
+                >
+                  Login
+                </Link>
+              </div>
+            </li>
+
           </ul>
         </div>
       </header>

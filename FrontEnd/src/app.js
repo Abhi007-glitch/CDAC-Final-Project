@@ -1,128 +1,160 @@
-import React, { lazy, Suspense, useState } from "react";
-import ReactDOM from "react-dom/client";
-import Header from "../src/components/Header";
-import Body from "./components/Body";
-import { createBrowserRouter, Outlet, RouterProvider } from "react-router-dom";
-import * as obj from "../src/components/Header";
+import React, { lazy, Suspense ,useState} from "react"
+import  ReactDOM  from "react-dom/client"
+import Header from "./components/Header"
+import Body from "./components/Body"
+import {createBrowserRouter,Outlet,Route,RouterProvider, Routes} from 'react-router-dom';
+import * as obj from "./components/Header";
 
 import Error from "./components/Error";
 import RestaurantMenu from "./components/RestaurantMenu";
 import Contact from "./components/Contact";
-import Cart from "./components/Cart";
+import OfferComponent from "./components/Offers";
+import Cart from "./components/Cart"
 
 import { Provider } from "react-redux";
-import store from "./Redux/store";
+import store from "./Redux/store"
 import LocationContext from "./ContextAPi/Location";
+import HomePage from "./pages/HomePage";
+import RegisterPage from "./pages/RegisterPage";
+import LoginPage from "./pages/LoginPage";
+import Dashboard from "./components/Dashboard";
+import CurrentOrders from "./components/CurrentOrders";
+import OrderAccepted from "./components/OrderAccepted";
+import OrderCompleted from "./components/OrderCompleted";
+import Menu from "./components/Menu";
+import UserDetails from "./components/UserDetails";
+import { AuthProvider } from "./ContextAPi/AuthProvider";
+import App1 from "./App1";
 
-const Tittle = obj.Logo; // after export default we can rename any componet (either name exported or named exported)
+const Tittle  = obj.Logo; // after export default we can rename any componet (either name exported or named exported)
 
-/**
- *
- * Performing Bundle Spliting or On Demand Loading or LazyLoading or Dynamic Loading or Dynamic import
- * Remeber all the Names
- *
- *
- *
- *
- * **********  Step 1 : modifiy the all the import method of Component to be LazyLoaded or On demand Loading
- *
- * older code :
- *  import Component_Name from "Path of compnent"
- *
- * new Code :
- *
- * const Component_Name = lazy(()=>import("Path of Compoent"));
- *
- *
- * *********  Step2 : modify the Component inside Router
- *
- * const router = createBrowserRouter([
- * {
- *  {
- *   path:"Loading component route"
- *   element : <Suspense  fallback={Component to be displayed while bundle for the splitted component is being loaded or fetched }>
- *              <Component_Name/>
- *            </Suspense>
- * }
- * }])
- *
- *
- */
-// ********************Note : LazyLoading should be never performed inside another compoent, it should be done on top just below other import statements ***************************/
 
-//****************** *********  PerForming Bundling/Chunking of About Componet ********************************/
+ const About = lazy(()=>import("./components/About"));
 
-const About = lazy(() => import("./components/About"));
 
-const footer = (
-  <div>
-    <h1>footer</h1>
-  </div>
-);
 
-const LayoutComponent = () => {
-  const [longitude, setLongitude] = useState(73.8567437);
-  const [latitude, setLatitude] = useState(18.5204303);
-  const [location_name, setLocation] = useState("pune");
-  const [page, setPage] = useState(1);
-  const locationContextValue = {
-    longitude,
-    latitude,
-    setLatitude,
-    setLongitude,
-    location_name,
-    setLocation,
-    page,
-    setPage,
-  }; // Location Context value
+const footer = <div><h1>footer</h1></div>
 
-  return (
+
+const LayoutComponent = ()=>{
+
+const [longitude, setLongitude]= useState(73.8567437);
+const [latitude,setLatitude] = useState(18.5204303);
+const [location_name,setLocation]= useState('pune');
+const [page, setPage]= useState(1);  
+const locationContextValue = {longitude,latitude,setLatitude,setLongitude,location_name,setLocation,page, setPage}; // Location Context value
+  
+
+
+    return (
     <div className=" flex-col justify-center items-center h-screen ">
-      <LocationContext.Provider value={locationContextValue}>
-        <Provider store={store}>
-          <Header />
-          <div className="mt-24 lg:mt-44 md:mt-36">
-            <Outlet />
-          </div>
-        </Provider>
-      </LocationContext.Provider>
-    </div>
-  );
+       <LocationContext.Provider value={locationContextValue}>
+       <Provider store={store}>
+       <AuthProvider>
+       
+        <Routes>
+            <Route path="/*" element={<App1/>}/>
+        </Routes>
+       </AuthProvider>
+       </Provider>
+       </LocationContext.Provider>
+       
+    </div> )
 };
+
 
 // defining and configuring router
 
 const appRouter = createBrowserRouter([
-  {
-    path: "/",
-    element: <LayoutComponent />,
-    errorElement: <Error />, // defining an Error element which will be displayed if any error in route occurs
-    children: [
-      {
-        path: "/",
-        element: <Body />,
-      },
-      {
-        path: "/about",
-        element: (
-          <Suspense fallback={<h1>Loading...</h1>}>
-            <About />
-          </Suspense>
-        ),
-      },
-      {
-        path: "/restaurant/:id",
-        element: <RestaurantMenu />,
-      },
-      {
-        path: "/cart",
-        element: <Cart />,
-      },
-    ], //listing different component that can be rendered inside this LayOutComponent(having constant header and footer Component) based on route
-  },
+    {
+        path:"/*",
+        element:<LayoutComponent/>,
+        errorElement:<Error/> ,  // defining an Error element which will be displayed if any error in route occurs
+        
+
+    //     children:[
+    //      {
+    //          path:"/",
+    //          element:<Body/>
+    //      },   
+    //     {
+    //         path:"/about",
+    //         element:<Suspense fallback={<h1>Loading...</h1>}>
+            
+    //         <About />
+    //         {/* <Routes>
+    //         <Route path="/" element={<HomePage />} />
+    //           <Route path="/register" element={<RegisterPage />} />
+    //           <Route path="/login" element={<LoginPage />} />
+    //           <Route path="/dashboard" element={<Dashboard />} />
+    //           <Route path="/current-orders" element={<CurrentOrders />} />
+    //           <Route path="/order-accepted" element={<OrderAccepted/>} />
+    //           <Route path="/order-completed" element={<OrderCompleted />} />
+    //           <Route path="/menu" element={<Menu/>} />
+    //           <Route path="/UserDetails" element={<UserDetails />} />
+    //       </Routes>
+    //     */}
+    //       </Suspense>
+    //     },
+
+    //     {
+    //         path:"/restaurantHomePage", // homepage
+    //         element:<HomePage />
+    //     },
+    //     {
+    //         path:"/register",
+    //         element:<RegisterPage />
+    //     },
+    //     {
+    //         path:"/login",
+    //         element:<LoginPage />
+    //     },
+    //     {
+    //         path:"/dashboard",
+    //         element:<Dashboard />
+    //     },
+    //     {
+    //         path:"/current-orders" ,
+    //         element:<CurrentOrders />
+    //     },
+    //     {
+    //         path:"/order-accepted",
+    //         element:<OrderAccepted/>
+    //     },
+    //     {
+    //         path:"/order-completed",
+    //         element:<OrderCompleted />
+    //     },
+    //     {
+    //         path:"/menu",
+    //         element:<Menu />
+    //     },
+    //     {
+    //         path:"/UserDetails",
+    //         element:<UserDetails />
+    //     },
+    //     {
+    //         path:"/offer",
+    //         element:<OfferComponent/>
+    //     },
+    //     {
+    //         path:"/restaurant/:id",
+    //         element:<RestaurantMenu/>
+    //     },
+    //     {
+    //         path:"/cart",
+    //         element:<Cart/>
+    //     }
+    // ] //listing different component that can be rendered inside this LayOutComponent(having constant header and footer Component) based on route
+
+
+    },
+    
 ]);
+
 
 const root = ReactDOM.createRoot(document.querySelector("#root"));
 
+
 //providing or implementing defined router in our Application
-root.render(<RouterProvider router={appRouter} />);
+root.render(<RouterProvider router={appRouter} />)
