@@ -2,11 +2,12 @@ package com.app.entities;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
 import lombok.AllArgsConstructor;
@@ -22,17 +23,20 @@ import lombok.ToString;
 @Getter
 @ToString
 @Entity
-@Table(name="customer")
 @EqualsAndHashCode(callSuper = false,doNotUseGetters = true,of="custEmail")
-public class Customer extends BaseEntity {
+public class Customer{
 	
-	@NotBlank(message = "First Name is required")
-	@Column(length=30)
-	private String custFirstName;
+	@Id	
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long custId;
 	
-	@NotBlank(message = "Last Name is required")
-	@Column(length=30)
-	private String custLastName;
+//	@NotBlank(message = "Name is required")
+//	@Column(length=30)
+//	private String custName;
+	
+//	@NotBlank(message = "Last Name is required")
+//	@Column(length=30)
+//	private String custLastName;
 	
 	@NotNull(message = "Email is required")
 	@Email(message = "Please provide a valid email address")
@@ -49,16 +53,16 @@ public class Customer extends BaseEntity {
 	@Size(min = 10, max = 100)
 	@Column(length=100)
 	private String custAddr;
+//	
+//	@Size(max=15)
+//	@Pattern(regexp = "[0-9+()-]*", message = "Contact should contain only numbers and allowed symbols: +()-")
+//	@Column(unique = true,length = 15)
+//	private String custContact;
 	
-	@Size(max=15)
-	@Pattern(regexp = "[0-9+()-]*", message = "Contact should contain only numbers and allowed symbols: +()-")
-	@Column(unique = true,length = 15)
-	private String custContact;
-	
-	@Size(min=4, max=20)
-	@Pattern(regexp = "^[a-zA-Z0-9.]{4,20}$", message = "UPI ID should be alphanumeric and between 4-20 characters")
-	@Column(unique=true,length=40)
-	private String custUPIID;
+//	@Size(min=4, max=20)
+//	@Pattern(regexp = "^[a-zA-Z0-9.]{4,20}$", message = "UPI ID should be alphanumeric and between 4-20 characters")
+//	@Column(unique=true,length=40)
+//	private String custUPIID;
 	
 	private String custRole;
 	

@@ -8,7 +8,6 @@ import javax.persistence.EntityManager;
 import javax.persistence.Query;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -44,9 +43,9 @@ public class OrderService {
    }
    
 public String deleteOrders(Long restId, Long custId, Long cartId) {
-	// TODO Auto-generated method stub
+	
 	orderRepo.deleteAllByRestIdAndCustIdAndCartId(restId, custId, cartId);
-	//DELETE FROM Orders o WHERE o.id.restId=:restId AND o.id.custId=:custId AND o.id.cartId=:cartId
+
 	String partitionName = "p"+restId;
 	   String sql = "DELETE FROM Orders PARTITION("+ partitionName+") WHERE rest_id=:restId AND cust_id=:custId AND cart_id=:cartId";
     
@@ -60,10 +59,8 @@ public String deleteOrders(Long restId, Long custId, Long cartId) {
 }
 
 public List<Orders> checkCustomerOrderStatus(Long restId,Long custId) {
-	// TODO Auto-generated method stub
 
-	  
-	   
+ 
 	   String partitionName = "p"+restId;
 	   String sql = "SELECT * FROM Orders PARTITION("+ partitionName+") WHERE rest_id = :restId and cust_id=:custId";
        
@@ -73,6 +70,21 @@ public List<Orders> checkCustomerOrderStatus(Long restId,Long custId) {
 	   
 	    List<Orders> results = query.getResultList();
 	   return results;
+}
+
+public Object getAllOrderOfRest(Long restId) {
+	// TODO Auto-generated method stub
+	
+	String partitionName = "p"+restId;
+	   String sql = "SELECT * FROM Orders PARTITION("+ partitionName+") WHERE rest_id = :restId ";
+    
+	   Query query = em.createNativeQuery(sql);
+	   query.setParameter("restId", restId);
+	   
+	    List<Orders> results = query.getResultList();
+	   return results;
+	
+	
 }
 
 

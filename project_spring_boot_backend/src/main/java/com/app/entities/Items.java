@@ -52,13 +52,13 @@ public class Items  {
     @NotNull(message = "isVeg status is required")
     private Boolean isVeg;
 
-   @Enumerated(EnumType.STRING)
-   @Column(length = 50)
-    private CuisineType cuisineType;  /// ***** changes here
-   
    @NotNull(message = "a item must belong to some restaurant")
    @Column(name="rest_id")
-   private int restId;   // (rest->rest_id)
+   private Long restId;   // (rest->rest_id)
+   
+   @Enumerated(EnumType.STRING)
+   @Column(length = 50)
+    private CuisineType cuisineType;
    
    @NotNull(message ="Dish type should be defined i.e Biryani,Idli")    // new added property
    @Column(name="dish_type")

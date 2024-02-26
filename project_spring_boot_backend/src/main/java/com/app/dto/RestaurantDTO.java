@@ -13,7 +13,7 @@ import lombok.ToString;
 @ToString
 public class RestaurantDTO {
 	
-	private Long id;
+	private Long restId;
     private String restName;
     private String restEmail;
     private String restPassword;
@@ -23,7 +23,7 @@ public class RestaurantDTO {
     private String restUPIID;
     private LocalTime restOpeningTime;
     private LocalTime restClosingTime;
-    private CuisineType cuisine;
     private String restRole;
+    private CuisineType cuisineType;
     
 }
