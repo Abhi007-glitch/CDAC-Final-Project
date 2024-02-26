@@ -17,10 +17,10 @@ import lombok.Setter;
 public class SearchRestByCuisineId implements Serializable{
 	@Column(name="cuisine_id")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long cuisineId ;
+	private Integer cuisineId ;
 	
 	@Column(name="rest_id")
-	private Long restId ;
+	private Integer restId ;
 	
 	@Override
     public boolean equals(Object o) {

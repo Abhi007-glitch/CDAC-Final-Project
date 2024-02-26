@@ -18,8 +18,7 @@ public class ItemDTO {
     private BigDecimal itemPrice;
     private byte[] itemImage;
     private String itemDescription;
-    private Boolean isVeg; 
-   private Long restId;
-   private CuisineType cuisineType;
-   private String dishType;
+    private Boolean isVeg;
+    private CuisineType cuisineType;  
+   private int restId; 
 }

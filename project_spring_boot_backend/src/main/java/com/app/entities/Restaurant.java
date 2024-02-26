@@ -88,15 +88,15 @@ public class Restaurant  {
 
     @DateTimeFormat(pattern = "HH:mm:ss")
     private LocalTime restClosingTime;
-     
-    private String restRole;
-    
+
     @Enumerated(EnumType.STRING)
     @Column(length = 50)
-     private CuisineType cuisineType;
+    private CuisineType cuisine;
     
-//    @Column(length = 100)
-//    private String message;  // to be displayed on rest menu page 
+    private String restRole;
+    
+    @Column(length = 100)
+    private String message;  // to be displayed on rest menu page 
     
     /*@OneToMany(mappedBy = "rest",
     		cascade = CascadeType.ALL,

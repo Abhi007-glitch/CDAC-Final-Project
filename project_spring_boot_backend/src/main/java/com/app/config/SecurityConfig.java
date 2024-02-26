@@ -51,7 +51,7 @@ public class SecurityConfig {
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 	    return http.csrf().disable()
 	            .authorizeRequests()
-	            .antMatchers("/orders/new", "/orders/authenticate","/orders/welcome","/restaurant/**").permitAll()
+	            .antMatchers("/orders/new", "/orders/authenticate","/orders/welcome").permitAll()
 	            .and()
 	            .authorizeRequests().antMatchers("/orders/**").authenticated()
 	            .and()
