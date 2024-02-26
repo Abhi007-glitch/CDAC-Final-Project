@@ -9,7 +9,8 @@ const AccordianComponent = ({data,type})=>{
     {
         return;
     }
- 
+    console.log("From accordian")
+    console.log(data);
 return (
 <div className="flex flex-col w-full justify-start items-start">
     
@@ -29,7 +30,7 @@ return (
     (data).map((item)=>{
         
 return <>
-   <MenuCard key={item?.card?.info?.id} id={item?.card?.info?.id} isVeg={item?.card?.info?.isVeg} name={item?.card?.info?.name} price={item?.card?.info?.price} description={item?.card?.info?.description} cloudinaryImageId={item?.card?.info?.imageId}/> 
+   <MenuCard key={item?.itemId} id={item?.id} isVeg={item?.isVeg} name={item?.itemName} price={item?.itemPrice} description={item?.itemDescription} cloudinaryImageId={"e33e1d3ba7d6b2bb0d45e1001b731fcf"}/> 
 
             </>
         })

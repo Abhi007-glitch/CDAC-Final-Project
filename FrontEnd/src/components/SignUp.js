@@ -8,9 +8,9 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import axios from "../utils/axios";
 import { Link } from "react-router-dom";
 
-const USER_REGEX = /^[A-z][A-z0-9-_]{3,23}$/;
+const USER_REGEX = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
 const PWD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%]).{8,24}$/;
-const REGISTER_URL = "/signUp"; // need to update this
+const REGISTER_URL = "/customer/new"; // need to update this
 
 const SignUp = () => {
   const userRef = useRef();
@@ -28,11 +28,14 @@ const SignUp = () => {
   const [validMatch, setValidMatch] = useState(false);
   const [matchFocus, setMatchFocus] = useState(false);
 
+  const [address, setAddress] = useState("");
+
   const [errMsg, setErrMsg] = useState("");
   const [success, setSuccess] = useState(false);
 
   useEffect(() => {
     userRef.current.focus();
+    fetch("/api/customer/welcome")
   }, []);
 
   useEffect(() => {
@@ -60,7 +63,14 @@ const SignUp = () => {
     try {
       const response = await axios.post(
         REGISTER_URL,
-        JSON.stringify({ user, pwd }),
+
+  //       private Long id;
+	// private String custEmail;
+  //   private String custPassword;
+	// private String custAddr;
+	// private String custRole;
+
+        JSON.stringify({ custEmail:user, custPassword:pwd, custAddr:address }),
         {
           headers: { "Content-Type": "application/json" },
           withCredentials: true,
@@ -109,7 +119,7 @@ const SignUp = () => {
                 htmlFor="username"
                 className="block text-sm font-medium leading-6 text-gray-900"
               >
-                Username:
+                Email:
                 <FontAwesomeIcon
                   icon={faCheck}
                   className={validName ? "valid" : "hidden"}
@@ -136,6 +146,7 @@ const SignUp = () => {
                 />
               </div>
             </div>
+
             <p
               id="uidnote"
               className={
@@ -143,12 +154,32 @@ const SignUp = () => {
               }
             >
               <FontAwesomeIcon icon={faInfoCircle} />
-              4 to 24 characters.
+              Requires an "@" symbol.
               <br />
-              Must begin with a letter.
+              Can contain any combination of word characters, hyphen, or period.
               <br />
-              Letters, numbers, underscores, hyphens allowed.
+              Must contain a top level domain eg .com .in
             </p>
+
+            <div>
+              <label
+                htmlFor="address"
+                className="block text-sm font-medium leading-6 text-gray-900"
+              >
+                Address:
+              </label>
+              <div className="mt-2">
+                <input
+                  type="text"
+                  id="address"
+                  autoComplete="off"
+                  onChange={(e) => setAddress(e.target.value)}
+                  value={address}
+                  required
+                  className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                />
+              </div>
+            </div>
 
             <div>
               <div className="flex items-center justify-between">
@@ -248,15 +279,13 @@ const SignUp = () => {
             </div>
 
             <p>
-          Already registered?
-          <span className="line">
-            <Link to="/login">Log In</Link>
-          </span>
-        </p>
+              Already registered?
+              <span className="line">
+                <Link to="/login">Log In</Link>
+              </span>
+            </p>
           </form>
         </div>
-
-       
       </div>
     </>
   );

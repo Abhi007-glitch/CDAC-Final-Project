@@ -13,14 +13,16 @@ const RestaurantMenu = ()=>{
     const params = useParams();
     const {id}= params;
     
+    console.log(id);
     const restaurant = useRestaurantMenu(id);
     
-    const headerData = getHeaderDetails(restaurant);
+    //const headerData = getHeaderDetails(restaurant);
     
     
-    const menuData = restaurant?.cards[2]?.groupedCard?.cardGroupMap?.REGULAR.cards;
+   //  const menuData = restaurant?.cards[2]?.groupedCard?.cardGroupMap?.REGULAR.cards;
     // menuData.splice(-2,2);
-   
+    console.log("SEEE HERE")
+   console.log( restaurant);
 
    if (restaurant===null)
    {
@@ -32,9 +34,9 @@ const RestaurantMenu = ()=>{
 
     return ((<div className=" flex flex-col justify-center  items-center mt-[13%]">
 
-    <div className="w-2/3"  >
+    {/* <div className="w-2/3"  >
         <RestaurantHead opened={headerData.opened} key={headerData.id} className="shadow-lg" totalRatingsString={headerData?.totalRatingsString} Name={headerData?.name} Rating={headerData?.avgRatingString} areaName={headerData?.areaName} cuisines = {headerData?.cuisines} cloudinaryImageId={headerData?.cloudinaryImageId} costForTwoMessage={headerData?.costForTwoMessage} city={headerData?.city} message={headerData?.message} maxDeliveryTime={headerData?.maxDeliveryTime}/>
-    </div>
+    </div> */}
 
   
       
@@ -50,7 +52,7 @@ const RestaurantMenu = ()=>{
 
        
      
-       {(menuData).map((section,i)=>{ return(<AccordianComponent  key={i} data={section?.card?.card?.itemCards} type={section?.card?.card?.title}  />)})};
+        <AccordianComponent  key={restaurant.itemId} data={restaurant} type={"Menu Items "}  />
         
        </div>
        {/* <AccordianComponent data={menuData?.cards[1]?.card?.card?.itemCards} type={menuData?.cards[1]?.card?.card?.title} ></AccordianComponent> */}

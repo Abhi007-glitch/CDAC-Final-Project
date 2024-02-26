@@ -6,10 +6,13 @@ const Navbar = () => {
   const dispatch = useDispatch();
 
   return (
-    <nav className="bg-gray-800 p-4">
+    <nav className="bg-gray-800 p-4 mt-[10%]">
       <div className="container mx-auto flex justify-between items-center">
         <div className="flex items-center">
-          <Link to="/restaurant/dashboard" className="text-white text-xl font-bold">
+          <Link
+            to="/restaurant/dashboard"
+            className="text-white text-xl font-bold"
+          >
             Restaurant Logo
           </Link>
         </div>
@@ -26,22 +29,16 @@ const Navbar = () => {
             onClick={dispatch(setClientView())}
             className="text-white hover:bg-gray-700 px-3 py-2 rounded transition duration-300"
           >
-           Go to Client Side
+            Go to Client Side
           </Link>
-         
 
           <Link
-            to="restaurant/order-accepted"
+            to="/restaurant/current-orders"
             className="text-white hover:bg-gray-700 px-3 py-2 rounded transition duration-300"
           >
             Current Order
           </Link>
-          <Link
-            to="/restaurant/order-completed"
-            className="text-white hover:bg-gray-700 px-3 py-2 rounded transition duration-300"
-          >
-            Order Completed
-          </Link>
+
           <Link
             to="/restaurant/menu"
             className="text-white hover:bg-gray-700 px-3 py-2 rounded transition duration-300"

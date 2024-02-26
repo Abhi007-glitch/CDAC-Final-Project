@@ -3,7 +3,7 @@ import useAuth from "../utils/useAuth";
 
 import axios from "../utils/axios";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-const LOGIN_URL = "/auth"; // APi END POINT OF BACKEND TO BE HIT  FOR THE AUTHENTICATION. *************************
+const LOGIN_URL = "/customer/authenticate"; // APi END POINT OF BACKEND TO BE HIT  FOR THE AUTHENTICATION. *************************
 
 const Login = () => {
   const { setAuth } = useAuth();
@@ -33,7 +33,7 @@ const Login = () => {
     try {
       const response = await axios.post(
         LOGIN_URL,
-        JSON.stringify({ user, pwd }),  // here we need to make changes as per the backend json specification 
+        JSON.stringify({ useremail:user, password:pwd }),  // here we need to make changes as per the backend json specification 
         {
           headers: { "Content-Type": "application/json" },
           withCredentials: true,
@@ -44,6 +44,7 @@ const Login = () => {
 
       const accessToken = response?.data?.accessToken;
       const roles = response?.data?.roles;
+      localStorage.setItem("userObj",JSON.stringify({useremail:user,password:pwd,token:accessToken}));
       setAuth({ user, pwd, roles, accessToken });
       setUser("");
       setPwd("");
@@ -85,7 +86,7 @@ const Login = () => {
                 htmlFor="username"
                 className="block text-sm font-medium leading-6 text-gray-900"
               >
-                Username:
+                Email:
               </label>
               <div lassName="mt-2">
                 <input

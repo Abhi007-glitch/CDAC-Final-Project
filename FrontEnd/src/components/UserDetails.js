@@ -1,55 +1,34 @@
 import React, { useState, useEffect } from "react";
-import UpdateForm from "./UpdateForm"; // Update the path accordingly
+import axios from "../utils/axios";
 import Navbar from "./Navbar";
+import { useSelector } from "react-redux";
 
 const UserDetails = () => {
   const [userDetails, setUserDetails] = useState(null);
-  const [isUpdateFormOpen, setUpdateFormOpen] = useState(false);
-
-  // Dummy data to display while fetching from API
-  const dummyData = {
-    restaurantName: "Sample Restaurant",
-    address: "123 Main St, City",
-    openingTime: "9:00 AM",
-    closingTime: "10:00 PM",
-    username: "sampleuser",
-    password: "********",
-    ownerName: "John Doe",
-    contactNumber: "123-456-7890",
-  };
-
+ // const restId = useSelector((store) => store.restaurantView.restId);
+ const restObj = JSON.parse(localStorage.getItem("restObj"));
+ const restId = restObj.id;
+ const yourToken = restObj.token;
   useEffect(() => {
-    // Mock API endpoint for user details
-    const apiUrl = "https://example.com/api/userDetails";
-
-    // Simulating a delay to mimic API request
-    const fetchData = async () => {
+    const fetchUserDetails = async () => {
       try {
-        // Simulate fetching data from the API
-        // In a real-world scenario, replace this with the actual fetch logic
-        await new Promise((resolve) => setTimeout(resolve, 1000));
-        setUserDetails(dummyData);
+        
+        const response = await axios.get(`/restaurant/owndetails/${restId}`, {
+          headers: {    Accept: 'application/json',
+          "Content-Type" : 'application/json',  Authorization : `Bearer ${yourToken}` },
+          withCredentials: true,
+        });
+        console.log("Data form userDetails : ", response);
+        const data = response.data;
+        setUserDetails(data);
+       
       } catch (error) {
-        console.error("Error fetching user details:", error);
+        console.error("Error fetching user details:", error.message);
       }
     };
 
-    fetchData();
+    fetchUserDetails();
   }, []);
-
-  const handleUpdate = (updatedDetails) => {
-    // Update logic (e.g., make API call to update details)
-    console.log("Updated details:", updatedDetails);
-    // You can implement the logic to update the data on the backend here
-  };
-
-  const handleUpdateButtonClick = () => {
-    setUpdateFormOpen(true);
-  };
-
-  const handleFormClose = () => {
-    setUpdateFormOpen(false);
-  };
 
   return (
     <div>
@@ -62,47 +41,36 @@ const UserDetails = () => {
                 User Details
               </h1>
               <div className="mb-4">
-                <strong>Restaurant Name:</strong> {userDetails.restaurantName}
+                <strong>ID:</strong> {userDetails.id}
               </div>
               <div className="mb-4">
-                <strong>Address:</strong> {userDetails.address}
+                <strong>Restaurant Name:</strong> {userDetails.restName}
               </div>
               <div className="mb-4">
-                <strong>Opening Time:</strong> {userDetails.openingTime}
+                <strong>Email:</strong> {userDetails.restEmail}
               </div>
               <div className="mb-4">
-                <strong>Closing Time:</strong> {userDetails.closingTime}
+                <strong>Password:</strong> {userDetails.restPassword}
               </div>
               <div className="mb-4">
-                <strong>Username:</strong> {userDetails.username}
+                <strong>Address:</strong> {userDetails.restAddr}
               </div>
               <div className="mb-4">
-                <strong>Password:</strong> {userDetails.password}
+                <strong>Contact Number:</strong> {userDetails.restContact}
               </div>
               <div className="mb-4">
-                <strong>Owner Name:</strong> {userDetails.ownerName}
+                <strong>UPI ID:</strong> {userDetails.restUPIID}
               </div>
               <div className="mb-4">
-                <strong>Contact Number:</strong> {userDetails.contactNumber}
+                <strong>Opening Time:</strong> {userDetails.restOpeningTime}
               </div>
-              <button
-                className="bg-blue-500 text-white px-4 py-2 rounded focus:outline-none"
-                onClick={handleUpdateButtonClick}
-              >
-                Update Info
-              </button>
+              <div className="mb-4">
+                <strong>Closing Time:</strong> {userDetails.restClosingTime}
+              </div>
+        
             </>
           ) : (
             <p>Loading user details...</p>
-          )}
-        </div>
-        <div className=" mx-auto">
-          {isUpdateFormOpen && (
-            <UpdateForm
-              userDetails={userDetails}
-              onUpdate={handleUpdate}
-              onClose={handleFormClose}
-            />
           )}
         </div>
       </div>

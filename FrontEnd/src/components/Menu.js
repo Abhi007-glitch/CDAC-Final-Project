@@ -1,177 +1,120 @@
-import React, { useState, useEffect } from "react";
-import Navbar from "./Navbar";
-import AddMenuForm from "./AddMenuForm";
-import EditMenuForm from "./EditMenuForm";
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+import Navbar from './Navbar';
+import AddMenuForm from './AddMenuForm';
+import EditMenuForm from './EditMenuForm';
+import { useSelector } from "react-redux";
+
+let arr = [
+  {
+    "item_id": 1,
+    "cart_id": 2,
+    "rest_id": 3,
+    "dish_name": "Idli"
+  },
+  {
+    "item_id": 2,
+    "cart_id": 3,
+    "rest_id": 4,
+    "dish_name": "Plain Idli"
+  },
+  {
+    "item_id": 3,
+    "cart_id": 4,
+    "rest_id": 5,
+    "dish_name": "Fry Idli"
+  },
+  {
+    "item_id": 4,
+    "cart_id": 5,
+    "rest_id": 6,
+    "dish_name": "Fry Idli"
+  }
+
+]
 
 const Menu = () => {
+
+// const restId = useSelector((store) => store.restaurantView.restId);
+  
+
   const [menuItems, setMenuItems] = useState([]);
-  const [isAddFormOpen, setAddFormOpen] = useState(false);
-  const [isEditFormOpen, setEditFormOpen] = useState(false);
-  const [editedItemId, setEditedItemId] = useState(null);
+  const [menu,setMenu] =useState(arr);
+ 
 
-  useEffect(() => {
-    // Fetch menu items from the backend API
-    fetchMenuItems();
-  }, []);
-
-  const fetchMenuItems = () => {
-    // fetch('/api/menu')
-    //   .then(response => response.json())
-    //   .then(data => setMenuItems(data))
-    //   .catch(error => console.error('Error fetching menu items:', error));
-
-    const sampleData = [
-      { id: 1, name: "Cheeseburger", price: 8.99 },
-      { id: 2, name: "Margherita Pizza", price: 12.5 },
-      { id: 3, name: "Chicken Alfredo Pasta", price: 15.99 },
-      { id: 4, name: "Caesar Salad", price: 7.5 },
-      { id: 5, name: "Chocolate Brownie", price: 5.99 },
-    ];
-
-    setMenuItems(sampleData);
-  };
-
-  const handleAddNewMenu = (newMenuItem) => {
-    // Add new menu item logic (make API call to add new menu item)
-
-    // fetch('/api/menu', {
-    //   method: 'POST',
-    //   headers: {
-    //     'Content-Type': 'application/json',
-    //   },
-    //   body: JSON.stringify(newMenuItem),
-    // })
-    //   .then(response => response.json())
-    //   .then(data => {
-    //     setMenuItems(prevMenuItems => [...prevMenuItems, data]);
-    //     setAddFormOpen(false);
-    //   })
-    //   .catch(error => console.error('Error adding new menu item:', error));
-
-    const newItem = { id: menuItems.length + 1, ...newMenuItem };
-    setMenuItems((prevMenuItems) => [...prevMenuItems, newItem]);
-    setAddFormOpen(false);
-  };
-
-  const handleEditMenu = (itemId) => {
-    // Set the item to edit and open the edit form
-    setEditedItemId(itemId);
-    setEditFormOpen(true);
-  };
-
-  const handleUpdateMenu = (editedMenuItem) => {
-    // Update the menu item in the backend (make API call) and update state
-    fetch(`/api/menu/${editedItemId}`, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(editedMenuItem),
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        setMenuItems((prevMenuItems) =>
-          prevMenuItems.map((item) => (item.id === editedItemId ? data : item))
-        );
-        setEditedItemId(null);
-        setEditFormOpen(false);
-      })
-      .catch((error) => console.error("Error updating menu item:", error));
-  };
-
-  const handleCancelEditForm = () => {
-    setEditedItemId(null);
-    setEditFormOpen(false);
-  };
-
-  const handleRemoveMenu = (itemId) => {
-    // Remove the menu item from the backend (make API call) and update state
-    fetch(`/api/menu/${itemId}`, {
-      method: "DELETE",
-    })
-      .then(() => {
-        setMenuItems((prevMenuItems) =>
-          prevMenuItems.filter((item) => item.id !== itemId)
-        );
-      })
-      .catch((error) => console.error("Error removing menu item:", error));
-  };
+  function handleDelete(id) {
+    // arr.splice(id,1);
+    arr.splice(id,1);
+  }
 
   return (
     <div>
       <Navbar />
       <div className="container mx-auto mt-8">
-        <div className="flex justify-around items-center mb-4">
-          <h2 className="text-2xl font-bold">Menu</h2>
-          <button
-            className="bg-blue-500 text-white px-4 py-2 rounded focus:outline-none"
-            onClick={() => {
-              setAddFormOpen(true);
-              setEditedItemId(null);
-            }}
-          >
-            Add New Menu
-          </button>
-        </div>
 
-        {menuItems.length > 0 ? (
           <table className="min-w-full border border-gray-300">
-            <thead>
+            <tr>
+              <th className="border border-gray-300 px-4 py-2">
+                Item Name
+              </th>
+              <th className="border border-gray-300 px-4 py-2">
+                Cart Id
+              </th>
+              <th className="border border-gray-300 px-4 py-2">
+                Rest ID
+              </th>
+            </tr>
+            {menu.map(item => (
               <tr>
-                <th className="border border-gray-300 px-4 py-2">ID</th>
-                <th className="border border-gray-300 px-4 py-2">Name</th>
-                <th className="border border-gray-300 px-4 py-2">Price</th>
-                <th className="border border-gray-300 px-4 py-2">Actions</th>
+                <td className="border border-gray-300 px-4 py-2">
+                {item.dish_name}
+                </td>
+                <td className="border border-gray-300 px-4 py-2">
+                {item.cart_id}
+                </td>
+                <td className="border border-gray-300 px-4 py-2">
+                {item.rest_id}
+                </td>
+                <td className="border border-gray-300 px-4 py-2">
+                <button
+            className="bg-red-500 text-white px-2 py-1 rounded"
+            onClick={() => {
+              setMenu(
+                menu.filter(a =>
+                  a.item_id !== item.item_id
+                )
+              );
+            }}>
+              Delete
+            </button>
+                </td>
               </tr>
-            </thead>
-            <tbody className="text-center">
-              {menuItems.map((item) => (
-                <tr key={item.id}>
-                  <td className="border border-gray-300 px-4 py-2">
-                    {item.id}
-                  </td>
-                  <td className="border border-gray-300 px-4 py-2">
-                    {item.name}
-                  </td>
-                  <td className="border border-gray-300 px-4 py-2">
-                    {item.price}
-                  </td>
-                  <td className="border border-gray-300 px-4 py-2">
-                    <button
-                      className="bg-yellow-500 text-white px-2 py-1 rounded mr-2"
-                      onClick={() => handleEditMenu(item.id)}
-                    >
-                      Edit
-                    </button>
-                    <button
-                      className="bg-red-500 text-white px-2 py-1 rounded"
-                      onClick={() => handleRemoveMenu(item.id)}
-                    >
-                      Remove
-                    </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
+            ))}
           </table>
-        ) : (
-          <p>No menu items available.</p>
-        )}
-      </div>
 
-      {isAddFormOpen && (
-        <AddMenuForm
-          onSubmit={handleAddNewMenu}
-          onCancel={() => setAddFormOpen(false)}
-        />
-      )}
-      {isEditFormOpen && (
-        <EditMenuForm
-          onSubmit={handleUpdateMenu}
-          onCancel={handleCancelEditForm}
-          editedItem={editedItemId}
-        />
-      )}
+
+          {/* <ul>
+        {menu.map(item => (
+          <li key={item.item_id}>
+            {item.dish_name}{' '}{item.cart_id}{' '}{item.rest_id}{' '}
+            <button
+            className="bg-red-500 text-white px-2 py-1 rounded"
+            onClick={() => {
+              setMenu(
+                menu.filter(a =>
+                  a.item_id !== item.item_id
+                )
+              );
+            }}>
+              Delete
+            </button> <br/> <br/>
+          </li>
+        ))}
+      </ul> */}
+
+
+
+      </div>
     </div>
   );
 };

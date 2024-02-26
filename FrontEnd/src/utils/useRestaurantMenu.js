@@ -8,6 +8,7 @@
 import { useState,useEffect, useContext } from "react";
 import { swiggy_menu_api_URL } from "../../const";
 import LocationContext from "../ContextAPi/Location";
+import axios from "./axios";
 
 
 const useRestaurantMenu = (urlId)=>{
@@ -17,9 +18,14 @@ const useRestaurantMenu = (urlId)=>{
     const {latitude,longitude}= useContext(LocationContext);
 
      const getRestaurantMenu = async()=>{
-        const URL = swiggy_menu_api_URL+`?menuId=${urlId}&latitude=${latitude}&longitude=${longitude}`;
-        const data = await fetch(URL);
-        const json = await data.json();
+        const URL = `/item/allitems/${urlId}`;
+        let json;
+     
+       json = await axios.get(
+       URL
+      );
+      console.log("Menu data--->");
+       console.log(json.data);
        
         console.log("Menu Data ", json);
         setRestaurant(json.data);

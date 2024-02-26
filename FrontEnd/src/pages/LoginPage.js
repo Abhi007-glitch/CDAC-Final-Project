@@ -1,23 +1,74 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+
 import Navbar from "../components/LandingPage/Navbar";
 
-const LoginPage = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const navigate = useNavigate();
+import axios from "../utils/axios";
+import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
 
-  const handleSubmit = (e) => {
+
+const REGISTER_URL = "/restaurant/authenticate";
+
+
+const LoginPage = () => {
+  // const [useremail, setUseremail] = useState("");
+  // const [password, setPassword] = useState("");
+  // const navigate = useNavigate();
+  const dispatch=useDispatch();
+
+  const navigate = useNavigate();
+  const [formData, setFormData] = useState({
+    useremail:"",
+    password:""
+  })
+
+  const handleChange = (e) => {
+
+    let draftForm = {
+      ...formData,
+     [e.target.name] : e.target.value
+    }
+    setFormData(draftForm)
+
+
+  };
+
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
+
     // Validate the email and password
     // Authenticate the user and save the authentication token
     // Navigate to the dashboard page
-    const restaurant = {
-      email,
-      password,
-    };
-    console.log(restaurant);
-    navigate("/restaurant/dashboard");
+
+    console.log(formData);
+
+    
+    try {
+      const response = await axios.post(
+        REGISTER_URL,
+        JSON.stringify(
+          formData
+          ),
+        {
+          headers: { "Content-Type": "application/json" },
+          withCredentials: true,
+        }
+      );
+      
+
+      console.log("Login response : ", response.data);
+      localStorage.setItem("restObj",JSON.stringify(response.data));
+      
+
+      navigate("/restaurant/dashboard");
+        
+    } catch (err) {
+      if(err){
+        console.log("error",err);
+      }
+    }
+
   };
 
   return (
@@ -35,10 +86,10 @@ const LoginPage = () => {
             </label>
             <input
               type="email"
-              id="email"
+              name="useremail"
               className="w-full p-2 border border-gray-300 rounded-md"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              value={formData.useremail}
+              onChange={handleChange}
             />
           </div>
           <div className="mb-4">
@@ -47,10 +98,10 @@ const LoginPage = () => {
             </label>
             <input
               type="password"
-              id="password"
+              name="password"
               className="w-full p-2 border border-gray-300 rounded-md"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              value={formData.password}
+              onChange={handleChange}
             />
           </div>
           <button

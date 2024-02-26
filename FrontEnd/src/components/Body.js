@@ -15,7 +15,8 @@ import LocationContext from "../ContextAPi/Location";
 import { extractAndFormateData } from "../utils/extractAndFormateData";
 import useGetDataByDishName from "../utils/useGetDataByDishName";
 import useGetDataByCuisineName from "../utils/useGetDataByCuisine";
-
+import axios from "../utils/axios";
+const url = "/restaurant/all";
 const Body = () => {
   const [searchText, setSearchText] = useState("");
   const [restaurantFilterdData, setRestaurantFilterdData] = useState([]);
@@ -65,70 +66,88 @@ const Body = () => {
       </h1>
     );
   }
+ 
 
+  // ---------------------------------------->>>>>>>>>>>>>>>>>>>>>>>>> get ALL rest data 
   const getData = async () => {
-    let URL = swiggy_api_URL + `?latitude=${latitude}&longitude=${longitude}`;
-    const data = await fetch(URL);
-    const json = await data.json();
+    let URL = "/restaurant/all";
+    let json;
+    try{
+      json = await axios.get(
+       URL
+      );
+       console.log(json.data);
+     
+      setRestaurantData(json.data);
+     setRestaurantFilterdData(json.data);
 
-    console.log("JSON received at Body ", json);
-    const listDetails = json.data.cards;
+     localStorage.setItem(restaurantData, JSON.stringify(restaurantData));
 
-    const temp = extractAndFormateData(listDetails);
-    console.log("Formated Data : " + temp);
-
-    // json?.data?.cards[2]?.data?.data?.cards
-    setRestaurantData(temp);
-    setRestaurantFilterdData(temp);
-
-    localStorage.setItem(restaurantData, JSON.stringify(restaurantData));
-  };
-
-  const getInfiniteData = async () => {
-    let URL =
-      swiggy_api_URL_Infinite_Scroll +
-      `?latitude=${latitude}&longitude=${longitude}&page=${page}`;
-    const Data = await fetch(URL);
-    const json = await Data.json();
-    const listDetails = json?.data?.cards;
-
-    const temp = extractAndFormateData(listDetails);
-
-    let prev = restaurantData;
-    let data;
-
-    if (prev) data = [...prev, ...temp];
-    else data = [...temp];
-
-    setRestaurantData(data);
-
-    prev = restaurantFilterdData;
-    if (prev) data = [...prev, ...temp];
-    else data = [...temp];
-    setRestaurantFilterdData(data);
-  };
-
-  const handleInfiniteScroll = async () => {
-    try {
-      if (
-        window.innerHeight + document.documentElement.scrollTop >=
-        document.documentElement.scrollHeight
-      ) {
-        setPage((prev) => prev + 1);
-      }
-    } catch (error) {
-      console.log(error);
     }
+    catch(err)
+    {
+      console.log(err);
+    }
+
+   //const data = await fetch(URL);
+    // const json = await data.json();
+
+    // console.log("JSON received at Body ", json);
+
+    // const listDetails = json.data.cards;
+
+    // const temp = extractAndFormateData(listDetails);
+    // console.log("Formated Data : " + temp);
+
+    // // json?.data?.cards[2]?.data?.data?.cards
+   
   };
 
-  // Normal useEffect to make call for Regular data
-  useEffect(() => {
-    if (page != 1) {
-      getInfiniteData();
-    }
-    console.log("Regular useEffect called ");
-    console.log(page);
-  }, [page]);
+  // const getInfiniteData = async () => {
+  //   let URL =
+  //     swiggy_api_URL_Infinite_Scroll +
+  //     `?latitude=${latitude}&longitude=${longitude}&page=${page}`;
+  //   const Data = await fetch(URL);
+  //   const json = await Data.json();
+  //   const listDetails = json?.data?.cards;
+
+  //   const temp = extractAndFormateData(listDetails);
+
+  //   let prev = restaurantData;
+  //   let data;
+
+  //   if (prev) data = [...prev, ...temp];
+  //   else data = [...temp];
+
+  //   setRestaurantData(data);
+
+  //   prev = restaurantFilterdData;
+  //   if (prev) data = [...prev, ...temp];
+  //   else data = [...temp];
+  //   setRestaurantFilterdData(data);
+  // };
+
+  // const handleInfiniteScroll = async () => {
+  //   try {
+  //     if (
+  //       window.innerHeight + document.documentElement.scrollTop >=
+  //       document.documentElement.scrollHeight
+  //     ) {
+  //       setPage((prev) => prev + 1);
+  //     }
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
+
+  // // Normal useEffect to make call for Regular data
+  // useEffect(() => {
+  //   if (page != 1) {
+  //     getInfiniteData();
+  //   }
+  //   console.log("Regular useEffect called ");
+  //   console.log(page);
+  // }, [page]);
 
   //For New Location clearing older data and fetchig new one. -- when we fetch data for a new location
   useEffect(() => {
@@ -140,16 +159,16 @@ const Body = () => {
       await getData();
     };
     Async();
-  }, [latitude, longitude]);
+  }, []);
 
   // useEffect for InfiniteScroll
-  useEffect(() => {
-    document.addEventListener("scroll", handleInfiniteScroll);
+  // useEffect(() => {
+  //   document.addEventListener("scroll", handleInfiniteScroll);
 
-    return () => {
-      document.removeEventListener("scroll", handleInfiniteScroll);
-    };
-  }, []);
+  //   return () => {
+  //     document.removeEventListener("scroll", handleInfiniteScroll);
+  //   };
+  // }, []);
   console.log("render");
 
   const getLocation = useCallback(
@@ -174,15 +193,15 @@ const Body = () => {
   //conditional rendering is done inside a render();
 
   //debouncing  -> for filtering data based on the restaurant name
-  useEffect(() => {
-    const Filter = setTimeout(() => {
-      let data = FilterData(searchText, restaurantData);
-      setRestaurantFilterdData(data);
-    }, 1000);
-    return () => {
-      clearTimeout(Filter);
-    };
-  }, [searchText]);
+  // useEffect(() => {
+  //   const Filter = setTimeout(() => {
+  //     let data = FilterData(searchText, restaurantData);
+  //     setRestaurantFilterdData(data);
+  //   }, 1000);
+  //   return () => {
+  //     clearTimeout(Filter);
+  //   };
+  // }, [searchText]);
 
   // avoiding rending component (Early return)
   if (restaurantFilterdData === undefined) {
@@ -271,10 +290,10 @@ const Body = () => {
             console.log(restaurant);
             return (
               <Link
-                to={"/restaurant/" + restaurant.info.id}
-                key={restaurant.info.id}
+                to={"/restaurant/" + restaurant.restId}
+                key={restaurant.restId}
               >
-                <RestaurantCard {...restaurant.info} />
+                <RestaurantCard {...restaurant} />
               </Link>
             );
           })

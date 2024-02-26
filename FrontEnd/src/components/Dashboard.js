@@ -6,9 +6,11 @@ import UserDetails from "./UserDetails";
 import CurrentOrders from "./CurrentOrders";
 
 const Dashboard = () => {
+  
+
   return (
     <div className="mt-[10%]">
-      <UserDetails></UserDetails>
+      <UserDetails  ></UserDetails>
     </div>
   );
 };

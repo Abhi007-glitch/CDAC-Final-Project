@@ -52,11 +52,7 @@ const App1 = () => {
             path="/restaurant/current-orders"
             element={<CurrentOrders />}
           />
-          <Route
-            path="/restaurant/order-accepted"
-            element={<OrderAccepted />}
-          />
-          <Route
+         <Route
             path="/restaurant/order-completed"
             element={<OrderCompleted />}
           />
