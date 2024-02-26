@@ -3,6 +3,7 @@ package com.app.entities;
 
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
+import javax.persistence.Table;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -16,6 +17,7 @@ import lombok.ToString;
 @Getter
 @ToString
 @Entity
+@Table(name="searchrestbyitem")
 public class SearchRestByItem {
 	
 	@EmbeddedId

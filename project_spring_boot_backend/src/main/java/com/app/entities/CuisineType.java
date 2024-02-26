@@ -1,5 +1,14 @@
 package com.app.entities;
 
 public enum CuisineType {
-Indian,Italian,Labnese,Chinese,SeaFood
+	MisalPav,
+	KoshaMangsho,
+	Dhokla,
+	RoganJosh,
+	Pongal,
+	PapayaKhar,
+	LittiChokha,
+	Indian,
+	Italian,
+	Mexican
 }
